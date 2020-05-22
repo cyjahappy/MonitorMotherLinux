@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ general_data['server_ip'] }} 服务器监控</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-table.css">
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/bootstrap.bundle.js"></script>
+    <script src="/static/js/cyj-line_chart.js"></script>
+    <script src="/static/js/bootstrap-table.js"></script>
+</head>
+<body>
+<!--导航栏-->
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+
+    <!-- 大标题 -->
+    <a class="navbar-brand" href="#">{{ general_data['server_ip'] }} 服务器监控</a>
+
+    <!-- 定义导航栏在小屏幕中的折叠按钮-->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- 导航栏中放置的链接 -->
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <!--更改阈值的按钮-->
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal" style="display:block;margin:0 auto">
+                更改阈值
+            </button>
+                <!-- 点击按钮后弹出的模态框 -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">更改阈值</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <!--模态框主体部分-->
+                        <div class="modal-body">
+                            <table data-toggle="table">
+                                <thead>
+                                    <tr>
+                                    <th>#</th>
+                                    <th>阈值</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                      <td>CPU使用率</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="CPU Threshold" id="cpu_threshold_box" value={{ server_info_threshold_data['cpu_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">%</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>内存占用率</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="Memory Threshold" id="memory_threshold_box" value={{ server_info_threshold_data['memory_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">%</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>磁盘占用率</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="Disk Threshold" id="disk_threshold_box" value={{ server_info_threshold_data['disk_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">%</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>带宽流量</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="Bandwidth Threshold" id="bandwidth_threshold_box" value={{ server_info_threshold_data['bandwidth_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">%</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>CRM的H5页面打开时长</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="HTML Open Time Threshold" id="HTML_open_time_threshold_box" value={{ server_info_threshold_data['HTML_open_time_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">秒</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>后台管理系统页面打开时长</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="Backend Management System Open Time Threshold" id="backend_management_system_open_time_threshold_box" value={{ server_info_threshold_data['backend_management_system_open_time_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">秒</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>微服务执行时长</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="Microservices Exec Time Threshold" id="microservices_exec_time_threshold_box" value={{ server_info_threshold_data['microservices_exec_time_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">秒</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>源服务器向目标服务器发送TCP包的速率</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="TCP Sent Mbps Threshold" id="tcp_sent_Mbps_threshold_box" value={{ server_info_threshold_data['tcp_sent_Mbps_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">Mbps</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>源服务器从目标服务器接收TCP包的速率</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="TCP Received Mbps Threshold" id="tcp_received_Mbps_threshold_box" value={{ server_info_threshold_data['tcp_received_Mbps_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">Mbps</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>Ping的延迟</td>
+                                      <td>
+                                          <div class="input-group mb-3">
+                                              <input type="text" class="form-control" aria-label="Ping Threshold" id="ping_threshold_box" value={{ server_info_threshold_data['ping_threshold']}}>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">秒</span>
+                                              </div>
+                                          </div>
+                                      </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!--模态框底部-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="modifyThreshold()">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </li>
+            <li class="nav-item">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    选择服务器
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="child_server_ip_menu">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!--主体部分-->
+<div class="container-fluid">
+
+  <!--放置CPU Line Chart的行-->
+  <div class="row">
+      <div class="col-12">
+        <div class="card card-chart">
+
+          <!--卡片的头部-->
+          <div class="card-header bg-white">
+            <div class="row">
+
+              <!--卡片头部的左半边-->
+              <div class="col-sm-6 text-left">
+                <h5 class="card-title">CPU Utility Rate</h5>
+              </div>
+
+              <!--卡片头部的右半边-->
+              <div class="col-sm-6"></div>
+
+            </div>
+          </div>
+
+          <!--卡片的主体-->
+          <div class="card-body bg-white">
+
+            <!--CPU的表-->
+            <div id="cpu_dashboard" style="width: 100%;height:300px;"></div>
+
+            <!--初始化cpuCharts的代码-->
+            <script type="text/javascript">
+                // 初始化cpuCharts实例
+                var cpuChart = echarts.init(document.getElementById('cpu_dashboard'),'cyj-line_chart');
+
+                // 声明有关CPU数据的全局变量
+                var cpu_data = {{ server_info_data['cpu']|safe}};
+                var cpu_date = {{ server_info_data['date']|safe }};
+
+                // 指定图表的配置项和数据
+                var cpu_line_chart_option = {
+                    tooltip: {},
+                    xAxis: {
+                        data: cpu_date
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '使用率',
+                        type: 'line',
+                        data: cpu_data,
+                        areaStyle: {
+                        normal:{
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: '#e5bae2' // 0% 处的颜色
+                            }, {
+                                offset: 1, color: 'white' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        }
+                        }
+                    }
+                    }],
+                    color:['#c728a2']
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                cpuChart.setOption(cpu_line_chart_option);
+            </script>
+          </div>
+          </div>
+        </div>
+  </div>
+
+  <!--放置四个实时显示数据的框的行-->
+  <div class="row bg-light">
+
+      <!--左1 CPU Pie Chart-->
+      <div class="col-sm-3">
+
+          <!--声明一个新卡片-->
+          <div class="card card-chart">
+
+              <!--卡片的头部-->
+              <div class="card-header bg-white">
+                <h6 class="text-center">CPU</h6>
+              </div>
+
+              <!--卡片的主体-->
+              <div class="card-body bg-white">
+
+                  <!--CPU实时数据的图-->
+                  <div class="row">
+                      <div class="col-sm-6">
+
+                          <!--声明用来放CPU Pie Chart的DOM-->
+                          <div id="cpu_pie_chart" style="width: 100%;height:150px;"></div>
+
+                          <!--初始化CPU Pie Chart-->
+                          <script>
+                              var cpu_pie_chart = echarts.init(document.getElementById('cpu_pie_chart'));
+                              var cpu_pie_chart_option = {
+                                    tooltip: {
+                                    trigger: 'item',
+                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                    },
+                                    color:['#c430d4', 'white'],
+                                    series: [
+                                        {
+                                            name: 'CPU',
+                                            type: 'pie',
+                                            radius: ['50%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: {
+                                                normal: {
+                                                position: 'inner',
+                                                show : false
+                                                }
+                                            },
+                                            labelLine:{
+                                                show: false
+                                            },
+                                            emphasis: {
+                                                label: {
+                                                    show: true,
+                                                    fontSize: '30',
+                                                    fontWeight: 'bold'
+                                                }
+                                            },
+                                            data: [
+                                                {value: 90, name: 'CPU使用率'},
+                                                {value: 10, name: '空闲'},
+                                            ]
+                                        }
+                                    ]
+                            };
+                            cpu_pie_chart.setOption(cpu_pie_chart_option);
+                          </script>
+                      </div>
+
+                  <!--CPU实时数据的数字-->
+                  <div class="col-sm-6">
+                      <p class="font-weight-light text-center">Real Time</p>
+                      <p class="font-weight-light text-center">CPU Utility Rate</p>
+                      <p class="text-center font-weight-bold lead" id="cpu_real_time_data">Loading...</p>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!--左2 Memory Pie Chart-->
+      <div class="col-sm-3">
+          <!--声明一个新卡片-->
+          <div class="card card-chart">
+
+              <!--卡片的头部-->
+              <div class="card-header bg-white">
+                <h6 class="text-center">Memory</h6>
+              </div>
+
+              <!--卡片的主体-->
+              <div class="card-body bg-white">
+
+                  <!--Memory实时数据的图-->
+                  <div class="row">
+                      <div class="col-sm-6">
+
+                          <!--声明用来放Memory Pie Chart的DOM-->
+                          <div id="memory_pie_chart" style="width: 100%;height:150px;"></div>
+
+                          <!--初始化Memory Pie Chart-->
+                          <script>
+                              var memory_pie_chart = echarts.init(document.getElementById('memory_pie_chart'));
+                              var memory_pie_chart_option = {
+                                    tooltip: {
+                                    trigger: 'item',
+                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                    },
+                                    color:['#fc6969', 'white'],
+                                    series: [
+                                        {
+                                            name: 'Memory',
+                                            type: 'pie',
+                                            radius: ['50%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: {
+                                                normal: {
+                                                position: 'inner',
+                                                show : false
+                                                }
+                                            },
+                                            labelLine:{
+                                                show: false
+                                            },
+                                            emphasis: {
+                                                label: {
+                                                    show: true,
+                                                    fontSize: '30',
+                                                    fontWeight: 'bold'
+                                                }
+                                            },
+                                            data: [
+                                                {value: 90, name: 'Memory使用率'},
+                                                {value: 10, name: '空闲'},
+                                            ]
+                                        }
+                                    ]
+                            };
+                            memory_pie_chart.setOption(memory_pie_chart_option);
+                          </script>
+                      </div>
+
+                  <!--Memory实时数据的数字-->
+                  <div class="col-sm-6">
+                      <p class="font-weight-light text-center">Real Time</p>
+                      <p class="font-weight-light text-center">Memory Utility Rate</p>
+                      <p class="text-center font-weight-bold lead" id="memory_real_time_data">Loading...</p>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!--右2 Disk Pie Chart-->
+      <div class="col-sm-3">
+          <!--声明一个新卡片-->
+          <div class="card card-chart">
+
+              <!--卡片的头部-->
+              <div class="card-header bg-white">
+                <h6 class="text-center">Disk</h6>
+              </div>
+
+              <!--卡片的主体-->
+              <div class="card-body bg-white">
+
+                  <!--Disk实时数据的图-->
+                  <div class="row">
+                      <div class="col-sm-6">
+
+                          <!--声明用来放Disk Pie Chart的DOM-->
+                          <div id="disk_pie_chart" style="width: 100%;height:150px;"></div>
+
+                          <!--初始化Disk Pie Chart-->
+                          <script>
+                              var disk_pie_chart = echarts.init(document.getElementById('disk_pie_chart'));
+                              var disk_pie_chart_option = {
+                                    tooltip: {
+                                    trigger: 'item',
+                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                    },
+                                    color:['#18cdc7', 'white'],
+                                    series: [
+                                        {
+                                            name: 'Disk',
+                                            type: 'pie',
+                                            radius: ['50%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: {
+                                                normal: {
+                                                position: 'inner',
+                                                show : false
+                                                }
+                                            },
+                                            labelLine:{
+                                                show: false
+                                            },
+                                            emphasis: {
+                                                label: {
+                                                    show: true,
+                                                    fontSize: '30',
+                                                    fontWeight: 'bold'
+                                                }
+                                            },
+                                            data: [
+                                                {value: 90, name: 'Disk使用率'},
+                                                {value: 10, name: '空闲'},
+                                            ]
+                                        }
+                                    ]
+                            };
+                            disk_pie_chart.setOption(disk_pie_chart_option);
+                          </script>
+                      </div>
+
+                  <!--Disk实时数据的数字-->
+                  <div class="col-sm-6">
+                      <p class="font-weight-light text-center">Real Time</p>
+                      <p class="font-weight-light text-center">Disk Utility Rate</p>
+                      <p class="text-center font-weight-bold lead" id="disk_real_time_data">Loading...</p>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!--右1 Network Pie Chart-->
+      <div class="col-sm-3">
+          <!--声明一个新卡片-->
+          <div class="card card-chart">
+
+              <!--卡片的头部-->
+              <div class="card-header bg-white">
+                <h6 class="text-center">Network</h6>
+              </div>
+
+              <!--卡片的主体-->
+              <div class="card-body bg-white">
+
+                  <!--Network实时数据的图-->
+                  <div class="row">
+                      <div class="col-sm-6">
+
+                          <!--声明用来放Network Pie Chart的DOM-->
+                          <div id="network_pie_chart" style="width: 100%;height:150px;"></div>
+
+                          <!--初始化Network Pie Chart-->
+                          <script>
+                              var network_pie_chart = echarts.init(document.getElementById('network_pie_chart'));
+                              var network_pie_chart_option = {
+                                    tooltip: {
+                                    trigger: 'item',
+                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                    },
+                                    color:['#f23359', 'white'],
+                                    series: [
+                                        {
+                                            name: 'Network',
+                                            type: 'pie',
+                                            radius: ['50%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: {
+                                                normal: {
+                                                position: 'inner',
+                                                show : false
+                                                }
+                                            },
+                                            labelLine:{
+                                                show: false
+                                            },
+                                            emphasis: {
+                                                label: {
+                                                    show: true,
+                                                    fontSize: '30',
+                                                    fontWeight: 'bold'
+                                                }
+                                            },
+                                            data: [
+                                                {value: 90, name: 'Network使用率'},
+                                                {value: 10, name: '空闲'},
+                                            ]
+                                        }
+                                    ]
+                            };
+                            network_pie_chart.setOption(network_pie_chart_option);
+                          </script>
+                      </div>
+
+                  <!--Network实时数据的数字-->
+                  <div class="col-sm-6">
+                      <p class="font-weight-light text-center">Real Time</p>
+                      <p class="font-weight-light text-center">Network Utility Rate</p>
+                      <p class="text-center font-weight-bold lead" id="network_real_time_data">Loading...</p>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+    <!--放置三张Line Chart的行-->
+    <div class="row bg-light">
+
+        <!--左 Memory Line Chart-->
+        <div class="col-sm-4">
+          <!--声明一个新卡片-->
+          <div class="card card-chart">
+
+              <!--卡片的头部-->
+              <div class="card-header bg-white">
+                  <h6 class="card-title text-center">Memory Utility Rate</h6>
+              </div>
+
+              <!--卡片的主体-->
+              <div class="card-body bg-white">
+
+                <!--Memory的表-->
+                <div id="memory_dashboard" style="width: 100%;height:300px;"></div>
+
+                <!--初始化memoryCharts的代码-->
+                <script type="text/javascript">
+                    // 初始化memoryCharts实例
+                    var memoryChart = echarts.init(document.getElementById('memory_dashboard'),'cyj-line_chart');
+
+                    // 声明有关Memory数据的全局变量
+                    var memory_data = {{ server_info_data['memory']|safe }};
+                    var memory_date = {{ server_info_data['date']|safe }};
+
+                    // 指定图表的配置项和数据
+                    var memory_line_chart_option = {
+                        tooltip: {},
+                        xAxis: {
+                            boundaryGap: false,
+                            data: memory_date
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '使用率',
+                            type: 'line',
+                            data: memory_data,
+                            areaStyle: {
+                                normal:{
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: '#54649c' // 0% 处的颜色
+                                    }, {
+                                        offset: 1, color: 'white' // 100% 处的颜色
+                                    }],
+                                    global: false // 缺省为 false
+                                }
+                                }
+                            }
+                        }],
+                        color:['#273462']
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    memoryChart.setOption(memory_line_chart_option);
+                </script>
+              </div>
+
+          </div>
+        </div>
+
+        <!--中 Disk Line Chart-->
+        <div class="col-sm-4">
+          <!--声明一个新卡片-->
+          <div class="card card-chart">
+
+              <!--卡片的头部-->
+              <div class="card-header bg-white">
+                  <h6 class="card-title text-center">Disk Utility Rate</h6>
+              </div>
+
+              <!--卡片的主体-->
+              <div class="card-body bg-white">
+
+                <!--Disk的表-->
+                <div id="disk_dashboard" style="width: 100%;height:300px;"></div>
+
+                <!--初始化diskCharts的代码-->
+                <script type="text/javascript">
+                    // 初始化diskCharts实例
+                    var diskChart = echarts.init(document.getElementById('disk_dashboard'),'cyj-line_chart');
+
+                    // 声明有关CPU数据的全局变量
+                    var disk_data = {{ server_info_data['disk']|safe }};
+                    var disk_date = {{ server_info_data['date']|safe }};
+
+                    // 指定图表的配置项和数据
+                    var disk_line_chart_option = {
+                        tooltip: {},
+                        xAxis: {
+                            data: disk_date
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '使用率',
+                            type: 'line',
+                            data: disk_data,
+                            areaStyle: {
+                                normal:{
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: '#cce2fe' // 0% 处的颜色
+                                    }, {
+                                        offset: 1, color: 'white' // 100% 处的颜色
+                                    }],
+                                    global: false // 缺省为 false
+                                }
+                                }
+                            }
+                        }],
+                        color:['#1c77ed']
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    diskChart.setOption(disk_line_chart_option);
+                </script>
+              </div>
+
+          </div>
+        </div>
+
+        <!--右 Network Line Chart-->
+        <div class="col-sm-4">
+          <!--声明一个新卡片-->
+          <div class="card card-chart">
+
+              <!--卡片的头部-->
+              <div class="card-header bg-white">
+                  <h6 class="card-title text-center">Network</h6>
+              </div>
+
+              <!--卡片的主体-->
+              <div class="card-body bg-white">
+
+                <!--Network的表-->
+                <div id="network_dashboard" style="width: 100%;height:300px;"></div>
+
+                <!--初始化diskCharts的代码-->
+                <script type="text/javascript">
+                    // 初始化diskCharts实例
+                    var networkChart = echarts.init(document.getElementById('network_dashboard'),'cyj-line_chart');
+
+                    // 声明有关CPU数据的全局变量
+                    var network_data = {{ server_info_data['network']|safe }};
+                    var network_date = {{ server_info_data['date']|safe }};
+
+                    // 指定图表的配置项和数据
+                    var network_line_chart_option = {
+                        tooltip: {},
+                        xAxis: {
+                            data: network_date
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '上传+下载(MB)',
+                            type: 'line',
+                            data: network_data,
+                            areaStyle: {
+                                normal:{
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: '#c4e8e0' // 0% 处的颜色
+                                    }, {
+                                        offset: 1, color: 'white' // 100% 处的颜色
+                                    }],
+                                    global: false // 缺省为 false
+                                }
+                                }
+                            }
+                        }],
+                        color:['#1bd0a3']
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    networkChart.setOption(network_line_chart_option);
+                </script>
+              </div>
+
+          </div>
+        </div>
+    </div>
+
+    <!--放置有关HTML前端性能测试数据的行-->
+    <div class="row bg-light">
+        <!--左半边-->
+        <div class="col-sm-6">
+            <div class="card card-chart">
+                <div class="card-header bg-white">
+                    <h6 class="card-title text-center">CRM HTML页面打开时长</h6>
+                </div>
+                <div class="card-body bg-white">
+                    <!--用于放置CRM HTML Line Chart-->
+                    <div id="CRM_HTML_test_result_dashboard" style="width: 100%;height:300px;"></div>
+                        <script type="text/javascript">
+                            // 初始化CRMHTMLLineCharts实例
+                            var CRMHTMLLineChart = echarts.init(document.getElementById('CRM_HTML_test_result_dashboard'),'cyj-line_chart');
+
+                            // 从视图函数中传入用于初始化图表的横纵坐标数据
+                            var CRM_HTML_onload_data = {{ CRM_HTML_test_result_data['onload']|safe }};
+                            var CRM_HTML_onload_date = {{ CRM_HTML_test_result_data['date']|safe }};
+
+                            // 指定图表的配置项和数据
+                            var CRM_HTML_line_chart_option = {
+                                tooltip: {},
+                                xAxis: {
+                                    data: CRM_HTML_onload_date
+                                },
+                                yAxis: {},
+                                series: [{
+                                    name: 'seconds',
+                                    type: 'line',
+                                    data: CRM_HTML_onload_data,
+                                    areaStyle: {
+                                        normal:{
+                                        color: {
+                                            type: 'linear',
+                                            x: 0,
+                                            y: 0,
+                                            x2: 0,
+                                            y2: 1,
+                                            colorStops: [{
+                                                offset: 0, color: '#f57175' // 0% 处的颜色
+                                            }, {
+                                                offset: 1, color: 'white' // 100% 处的颜色
+                                            }],
+                                            global: false // 缺省为 false
+                                        }
+                                        }
+                                    }
+                                }],
+                                color:['#f95056']
+                            };
+                            // 使用刚指定的配置项和数据显示图表。
+                            CRMHTMLLineChart.setOption(CRM_HTML_line_chart_option);
+                            </script>
+                </div>
+                <div class="card-footer bg-white">
+                    <h6 class="card-title text-center">{{ CRM_HTML_test_result_data['date'][0]|safe }}-{{ CRM_HTML_test_result_data['date'][-1]|safe }}期间 CRM HTML性能测试各个指标平均耗时</h6>
+                    <table data-toggle="table">
+                        <thead>
+                            <tr>
+                            <th>DNS查询</th>
+                            <th>TCP连接</th>
+                            <th>Request请求</th>
+                            <th>解析DOM树</th>
+                            <th>白屏</th>
+                            <th>DOM Ready</th>
+                            <th>页面完全加载完毕</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ CRM_HTML_test_result_data['dns_query_mean'] }}秒</td>
+                                <td>{{ CRM_HTML_test_result_data['tcp_connection_mean'] }}秒</td>
+                                <td>{{ CRM_HTML_test_result_data['request_mean'] }}秒</td>
+                                <td>{{ CRM_HTML_test_result_data['dom_parse_mean'] }}秒</td>
+                                <td>{{ CRM_HTML_test_result_data['blank_screen_mean'] }}秒</td>
+                                <td>{{ CRM_HTML_test_result_data['dom_ready_mean'] }}秒</td>
+                                <td>{{ CRM_HTML_test_result_data['onload_mean'] }}秒</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--右半边-->
+        <div class="col-sm-6">
+            <div class="card card-chart">
+                <div class="card-header bg-white">
+                    <h6 class="card-title text-center">后台管理系统HTML页面打开时长</h6>
+                </div>
+                <div class="card-body bg-white">
+                    <!--用于放置后台管理系统HTML Line Chart-->
+                    <div id="Management_System_HTML_test_result_dashboard" style="width: 100%;height:300px;"></div>
+                        <script type="text/javascript">
+                            // 初始化ManagementSystemHTMLLineChart实例
+                            var ManagementSystemHTMLLineChart = echarts.init(document.getElementById('Management_System_HTML_test_result_dashboard'),'cyj-line_chart');
+
+                            // 从视图函数中传入用于初始化图表的横纵坐标数据
+                            var Management_System_HTML_onload_data = {{ Management_System_HTML_test_result_data['onload']|safe }};
+                            var Management_System_HTML_onload_date = {{ Management_System_HTML_test_result_data['date']|safe }};
+
+                            // 指定图表的配置项和数据
+                            var Management_System_HTML_line_chart_option = {
+                                tooltip: {},
+                                xAxis: {
+                                    data: Management_System_HTML_onload_date
+                                },
+                                yAxis: {},
+                                series: [
+                                    {
+                                    name: 'seconds',
+                                    type: 'line',
+                                    data: Management_System_HTML_onload_data,
+                                    areaStyle: {
+                                        normal:{
+                                        color: {
+                                            type: 'linear',
+                                            x: 0,
+                                            y: 0,
+                                            x2: 0,
+                                            y2: 1,
+                                            colorStops: [{
+                                                offset: 0, color: '#f57175' // 0% 处的颜色
+                                            }, {
+                                                offset: 1, color: 'white' // 100% 处的颜色
+                                            }],
+                                            global: false // 缺省为 false
+                                        }
+                                        }
+                                    }
+                                    }
+                                ],
+                                color:['#f95056']
+                            };
+                            // 使用刚指定的配置项和数据显示图表。
+                            ManagementSystemHTMLLineChart.setOption(Management_System_HTML_line_chart_option);
+                            </script>
+                </div>
+                <div class="card-footer bg-white">
+                    <h6 class="card-title text-center">{{ Management_System_HTML_test_result_data['date'][0]|safe }}-{{ Management_System_HTML_test_result_data['date'][-1]|safe }} 期间后台管理系统HTML性能测试各个指标平均耗时</h6>
+                    <table data-toggle="table">
+                        <thead>
+                            <tr>
+                            <th>DNS查询</th>
+                            <th>TCP连接</th>
+                            <th>Request请求</th>
+                            <th>解析DOM树</th>
+                            <th>白屏</th>
+                            <th>DOM Ready</th>
+                            <th>页面完全加载完毕</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ Management_System_HTML_test_result_data['dns_query_mean'] }}秒</td>
+                                <td>{{ Management_System_HTML_test_result_data['tcp_connection_mean'] }}秒</td>
+                                <td>{{ Management_System_HTML_test_result_data['request_mean'] }}秒</td>
+                                <td>{{ Management_System_HTML_test_result_data['dom_parse_mean'] }}秒</td>
+                                <td>{{ Management_System_HTML_test_result_data['blank_screen_mean'] }}秒</td>
+                                <td>{{ Management_System_HTML_test_result_data['dom_ready_mean'] }}秒</td>
+                                <td>{{ Management_System_HTML_test_result_data['onload_mean'] }}秒</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--放置iPerf3测试结果和Ping测试结果数据的行-->
+    <div class="row bg-light">
+        <!--iPerf3测试结果Line Chart(左半边)-->
+        <div class="col-sm-6">
+            <div class="card card-chart">
+                <div class="card-header bg-white">
+                    <h5 class="card-title text-center">iPerf测试</h5>
+                    <h6 class="card-title text-center" id="iPerf3_Chart_Title"></h6>
+                    <div class="dropdown" >
+                        <button class="btn dropdown-toggle btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;margin:0 auto">
+                        选择目标IP地址
+                        </button>
+                        <!--下拉菜单选择IP地址-->
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="server_ip_menu"></div>
+                    </div>
+                </div>
+                <div class="card-body bg-white">
+                    <!--用于放置iPerf3 Line Chart-->
+                    <div id="iPerf3_test_result_dashboard" style="width: 100%;height:300px;"></div>
+                        <script type="text/javascript">
+                            // 初始化CRMHTMLLineCharts实例
+                            var iPerf3LineChart = echarts.init(document.getElementById('iPerf3_test_result_dashboard'));
+
+                            // 从视图函数中传入用于初始化图表的横纵坐标数据
+                            var iPerf3_TCP_sent_Mbps_data
+                            var iPerf3_TCP_received_Mbps_data
+                            var iPerf3_date
+                            var server_ip_list = {{ server_ip_list|safe}}
+                            var iPerf3_target_server_ip = server_ip_list[0]
+
+                            //用于初始化副标题中源主机与目标主机IP地址
+                            document.getElementById("iPerf3_Chart_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ iPerf3_target_server_ip
+
+                            //部署的时候链接要换!!!!!!!!!
+                            //用于填充选择IP地址的下拉菜单
+                            for (var i=0;i<server_ip_list.length;i++)
+                            {
+                                document.getElementById("server_ip_menu").innerHTML = document.getElementById("server_ip_menu").innerHTML + "<button class=\"dropdown-item\" onclick=\"refresh_iPerf3_Line_Chart('" + server_ip_list[i] + "')\">" + server_ip_list[i] + "</button>"
+                            }
+
+                            var child_server_ip_list = {{ child_server_ip_list|safe }}
+                            //用于填充导航栏中选择IP地址的下拉菜单
+                            for (var i=0;i<child_server_ip_list.length;i++)
+                            {
+                                document.getElementById("child_server_ip_menu").innerHTML = document.getElementById("child_server_ip_menu").innerHTML + "<a class=\"dropdown-item\" href=\"/dashboard/" + child_server_ip_list[0] + "\">" + child_server_ip_list[0] + "</a>"
+                            }
+
+                            //用于初始化图表的数据
+                            $.ajax({
+                                        type:'POST',
+                                        url:'http://{{ general_data['server_ip']}}/monitor/iperf-test-results-minutes',
+                                        dataType:'json',
+                                        data: {
+                                            'server_ip': iPerf3_target_server_ip
+                                        },
+                                        success:function(json)
+                                            {
+                                                iperf3_test_result = eval(json);
+
+                                                iPerf3_TCP_sent_Mbps_data = iperf3_test_result.sent_Mbps;
+                                                iPerf3_TCP_received_Mbps_data = iperf3_test_result.received_Mbps;
+                                                iPerf3_date = iperf3_test_result.date;
+
+                                                iPerf3LineChart.setOption({
+                                                tooltip: {
+                                                    trigger: 'axis'
+                                                },
+                                                legend: {
+                                                    data: ['TCP发送速率(Mbps)', 'TCP接收速率(Mbps)']
+                                                },
+                                                xAxis: {
+                                                    data: iPerf3_date
+                                                },
+                                                yAxis: {},
+                                                series: [
+                                                    {
+                                                        name: 'TCP发送速率(Mbps)',
+                                                        type: 'line',
+                                                        data: iPerf3_TCP_sent_Mbps_data,
+                                                        stack: '',
+                                                    },
+                                                    {
+                                                        name: 'TCP接收速率(Mbps)',
+                                                        type: 'line',
+                                                        data: iPerf3_TCP_received_Mbps_data,
+                                                        stack: '',
+                                                    }
+                                                ]
+                                                });
+                                            }
+                                    });
+                            </script>
+                </div>
+                <div class="card-footer bg-white">
+
+                </div>
+            </div>
+        </div>
+        <!--Ping测试结果Line Chart(右半边)-->
+        <div class="col-sm-6">
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+<!--定义作用于全局的JavaScript函数和变量-->
+<script>
+//声明存储系统信息的全局变量
+    var server_info
+    var real_time_server_info
+
+function refresh_iPerf3_Line_Chart(ip){
+        iPerf3_target_server_ip = ip
+        document.getElementById("iPerf3_Chart_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ iPerf3_target_server_ip
+        $.ajax({
+                type:'POST',
+                url:'http://{{ general_data['server_ip']}}/monitor/iperf-test-results-minutes',
+                dataType:'json',
+                data: {
+                    'server_ip': ip
+                },
+                success:function(json)
+                    {
+                        iperf3_test_result = eval(json);
+
+                        iPerf3_TCP_sent_Mbps_data = iperf3_test_result.sent_Mbps;
+                        iPerf3_TCP_received_Mbps_data = iperf3_test_result.received_Mbps;
+                        iPerf3_date = iperf3_test_result.date;
+
+                        iPerf3LineChart.setOption({
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['TCP发送速率(Mbps)', 'TCP接收速率(Mbps)']
+                        },
+                        xAxis: {
+                            data: iPerf3_date
+                        },
+                        yAxis: {},
+                        series: [
+                            {
+                                name: 'TCP发送速率(Mbps)',
+                                type: 'line',
+                                data: iPerf3_TCP_sent_Mbps_data,
+                                stack: '',
+                            },
+                            {
+                                name: 'TCP接收速率(Mbps)',
+                                type: 'line',
+                                data: iPerf3_TCP_received_Mbps_data,
+                                stack: '',
+                            }
+                        ]
+                        });
+                    }
+            });
+
+}
+
+//用于补上图表上的断层(图表默认获取到前一分钟的数据,这个异步用于获取本分钟的数据)
+$.ajax({
+            type:'GET',
+            url:'http://{{ general_data['server_ip']}}/monitor/server-info-api',
+            dataType:'json',
+            success:function(json)
+                {
+                    server_info = eval(json);
+
+                    cpu_date.push(getCurrentTime());
+                    cpu_data.push(server_info.cpu);
+
+                    memory_date.push(getCurrentTime());
+                    memory_data.push(server_info.memory);
+
+                    disk_date.push(getCurrentTime());
+                    disk_data.push(server_info.disk)
+
+                    network_date.push(getCurrentTime());
+                    network_data.push(server_info.network)
+
+                    cpuChart.setOption({
+                    xAxis: {
+                        data: cpu_date
+                    },
+                    series: [{
+                        name:'',
+                        data: cpu_data
+                    }]
+                    });
+
+                    memoryChart.setOption({
+                    xAxis: {
+                        data: memory_date
+                    },
+                    series: [{
+                        name:'',
+                        data: memory_data
+                    }]
+                    });
+
+                    diskChart.setOption({
+                    xAxis: {
+                        data: disk_date
+                    },
+                    series: [{
+                        name:'',
+                        data: disk_data
+                    }]
+                    });
+
+                    networkChart.setOption({
+                    xAxis: {
+                        data: network_date
+                    },
+                    series: [{
+                        name:'',
+                        data: network_data
+                    }]
+                    });
+                }
+        });
+
+//返回格式化的时间(HH:MM)
+        function getCurrentTime(){
+		var dtCur = new Date();
+		var hCur = dtCur.getHours();
+		var mCur = dtCur.getMinutes();
+		timeCur = (hCur < 10 ? "0" + hCur : hCur) + ":" + (mCur < 10 ? "0" + mCur : mCur);
+		return timeCur;
+	}
+
+//返回格式化的时间(HH:MM:SS)
+        function getCurrentTime_seconds(){
+		var dtCur = new Date();
+		var hCur = dtCur.getHours();
+		var mCur = dtCur.getMinutes();
+		var sCur = dtCur.getSeconds();
+		timeCur = (hCur < 10 ? "0" + hCur : hCur) + ":" + (mCur < 10 ? "0" + mCur : mCur) + ":" + (sCur < 10 ? "0" + sCur : sCur);
+		return timeCur;
+	}
+
+// 定时每分钟异步获取系统信息
+        server_info_minutes_timeTicket = setInterval(function () {
+        $.ajax({
+            type:'GET',
+            url:'http://{{ general_data['server_ip']}}/monitor/server-info-api',
+            dataType:'json',
+            success:function(json)
+                {
+                    server_info = eval(json);
+
+                    cpu_date.push(getCurrentTime());
+                    cpu_data.push(server_info.cpu);
+
+                    memory_date.push(getCurrentTime());
+                    memory_data.push(server_info.memory);
+
+                    disk_date.push(getCurrentTime());
+                    disk_data.push(server_info.disk)
+
+                    network_date.push(getCurrentTime());
+                    network_data.push(server_info.network)
+
+                    cpuChart.setOption({
+                    xAxis: {
+                        data: cpu_date
+                    },
+                    series: [{
+                        name:'',
+                        data: cpu_data
+                    }]
+                    });
+
+                    memoryChart.setOption({
+                    xAxis: {
+                        data: memory_date
+                    },
+                    series: [{
+                        name:'',
+                        data: memory_data
+                    }]
+                    });
+
+                    diskChart.setOption({
+                    xAxis: {
+                        data: disk_date
+                    },
+                    series: [{
+                        name:'',
+                        data: disk_data
+                    }]
+                    });
+
+                    networkChart.setOption({
+                    xAxis: {
+                        data: network_date
+                    },
+                    series: [{
+                        name:'',
+                        data: network_data
+                    }]
+                    });
+                }
+        });
+    }, 60000);
+
+// 定时每秒异步获取系统信息
+        server_info_second_timeTicket = setInterval(function () {
+        $.ajax({
+            type:'GET',
+            url:'http://{{ general_data['server_ip']}}/monitor/server-info-api',
+            dataType:'json',
+            success:function(json)
+                {
+                    real_time_server_info = eval(json);
+
+                    // 获取各项指标的值
+                    cpu_real_time_data = real_time_server_info.cpu
+                    memory_real_time_data = real_time_server_info.memory
+                    disk_real_time_data = real_time_server_info.disk
+                    network_real_time_data = real_time_server_info.network
+
+                    // 将实时数据显示在前端
+                    document.getElementById('cpu_real_time_data').innerHTML = cpu_real_time_data + '%'
+                    document.getElementById('memory_real_time_data').innerHTML = memory_real_time_data + '%'
+                    document.getElementById('disk_real_time_data').innerHTML = disk_real_time_data + '%'
+                    document.getElementById('network_real_time_data').innerHTML = network_real_time_data + 'MB/s'
+
+                    // 使用实时数据更新前端Pie Chart
+                    cpu_pie_chart.setOption({
+                        series: [{
+                            data: [
+                                {value: cpu_real_time_data, name: 'CPU使用率'},
+                                {value: 100 - cpu_real_time_data, name: '空闲'},
+                            ]
+                        }]
+                    });
+                    memory_pie_chart.setOption({
+                        series: [{
+                            data: [
+                                {value: memory_real_time_data, name: 'Memory使用率'},
+                                {value: 100 - memory_real_time_data, name: '空闲'},
+                            ]
+                        }]
+                    });
+                    disk_pie_chart.setOption({
+                        series: [{
+                            data: [
+                                {value: disk_real_time_data, name: 'Disk使用率'},
+                                {value: 100 - disk_real_time_data, name: '空闲'},
+                            ]
+                        }]
+                    });
+                    //需要根据不同服务器的实时带宽不同修改上限
+                    network_pie_chart.setOption({
+                        series: [{
+                            data: [
+                                {value: network_real_time_data, name: '每秒上传+下载的总量'},
+                                {value: 2 - network_real_time_data, name: '空'},
+                            ]
+                        }]
+                    });
+                }
+        });
+    }, 3000);
+
+    //调用api修改服务器各项指标阈值
+    function modifyThresholdAPI(cpu_value, memory_value, disk_value, bandwidth_value, html_open_time_value, backend_management_system_open_time_value, microservices_exec_time_value,tcp_sent_Mbps_threshold_value, tcp_received_Mbps_value, ping_value) {
+        $.ajax({
+                type:'PUT',
+                url:'/monitor/server-info-threshold-update/1/',
+                data: {
+                    'cpu_threshold' : cpu_value,
+                    'memory_threshold': memory_value,
+                    'disk_threshold': disk_value,
+                    'bandwidth_threshold': bandwidth_value,
+                    'HTML_open_time_threshold': html_open_time_value,
+                    'backend_management_system_open_time_threshold': backend_management_system_open_time_value,
+                    'microservices_exec_time_threshold': microservices_exec_time_value,
+                    'tcp_sent_Mbps_threshold': tcp_sent_Mbps_threshold_value,
+                    'tcp_received_Mbps_threshold': tcp_received_Mbps_value,
+                    'ping_threshold': ping_value,
+                },
+                success:function(arg) {}
+            });
+    }
+    //从输入框中获取数值并调用modifyThresholdAPI(),然后刷新当前页面
+    function modifyThreshold() {
+        let cpu_threshold = document.getElementById("cpu_threshold_box").value;
+        let memory_threshold = document.getElementById("memory_threshold_box").value;
+        let disk_threshold = document.getElementById("disk_threshold_box").value;
+        let bandwidth_threshold = document.getElementById("bandwidth_threshold_box").value;
+        let HTML_open_time_threshold = document.getElementById("HTML_open_time_threshold_box").value;
+        let backend_management_system_open_time_threshold = document.getElementById("backend_management_system_open_time_threshold_box").value;
+        let microservices_exec_time_threshold = document.getElementById("microservices_exec_time_threshold_box").value;
+        let tcp_sent_Mbps_threshold = document.getElementById("tcp_sent_Mbps_threshold_box").value;
+        let tcp_received_Mbps_threshold = document.getElementById("tcp_received_Mbps_threshold_box").value;
+        let ping_threshold = document.getElementById("ping_threshold_box").value;
+        modifyThresholdAPI(cpu_threshold, memory_threshold, disk_threshold, bandwidth_threshold, HTML_open_time_threshold, backend_management_system_open_time_threshold, microservices_exec_time_threshold, tcp_sent_Mbps_threshold, tcp_received_Mbps_threshold, ping_threshold);
+        location.reload();
+    }
+</script>

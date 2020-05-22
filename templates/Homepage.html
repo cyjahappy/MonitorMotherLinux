@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRM监控系统主页</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-table.css">
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/bootstrap.bundle.js"></script>
+    <script src="/static/js/bootstrap-table.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                 <div class="card card-chart bg-white">
+                <div class="card-body">
+                    <!--显示阈值的表格-->
+                    <table data-toggle="table">
+                        <thead>
+                            <tr>
+                            <th>#</th>
+                            <th>阈值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>CPU占用率</td>
+                              <td>
+                                  <div class="progress">
+                                      <div id="cpu_threshold" class="progress-bar bg-dark" role="progressbar" style="width: 90%"></div>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                                <td>内存占用率</td>
+                                    <td>
+                                      <div class="progress">
+                                          <div id="memory_threshold" class="progress-bar bg-dark" role="progressbar" style="width: 80%">90%</div>
+                                      </div>
+                                    </td>
+                            </tr>
+                            <tr>
+                              <td>磁盘占用率</td>
+                              <td>
+                                  <div class="progress">
+                                      <div id="disk_threshold" class="progress-bar bg-dark" role="progressbar" style="width: 90%"></div>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                                <td>实时带宽</td>
+                                <td>
+                                  <div class="progress">
+                                      <div id="bandwidth_threshold" class="progress-bar bg-dark" role="progressbar" style="width: 90%"></div>
+                                  </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>实时带宽</td>
+                                <td>
+                                  <div class="progress">
+                                      <div id="bandwidth_threshold" class="progress-bar bg-dark" role="progressbar" style="width: 90%"></div>
+                                  </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--卡片的底部-->
+                    <div class="card-footer bg-white">
+
+                          <!--更改阈值的按钮-->
+                        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal" style="display:block;margin:0 auto">
+                            更改阈值
+                        </button>
+                        <!-- 点击按钮后弹出的模态框 -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">更改阈值</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <!--模态框主体部分-->
+                                    <div class="modal-body">
+                                        <table data-toggle="table">
+                                            <thead>
+                                                <tr>
+                                                <th>#</th>
+                                                <th>阈值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                  <td>CPU使用率</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="CPU Threshold" id="cpu_threshold_box" value={{ server_info_threshold_data['cpu_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">%</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>内存占用率</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="Memory Threshold" id="memory_threshold_box" value={{ server_info_threshold_data['memory_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">%</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>磁盘占用率</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="Disk Threshold" id="disk_threshold_box" value={{ server_info_threshold_data['disk_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">%</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>带宽流量</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="Bandwidth Threshold" id="bandwidth_threshold_box" value={{ server_info_threshold_data['bandwidth_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">%</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>CRM的H5页面打开时长</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="HTML Open Time Threshold" id="HTML_open_time_threshold_box" value={{ server_info_threshold_data['HTML_open_time_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">秒</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>后台管理系统页面打开时长</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="Backend Management System Open Time Threshold" id="backend_management_system_open_time_threshold_box" value={{ server_info_threshold_data['backend_management_system_open_time_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">秒</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>微服务执行时长</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="Microservices Exec Time Threshold" id="microservices_exec_time_threshold_box" value={{ server_info_threshold_data['microservices_exec_time_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">秒</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>源服务器向目标服务器发送TCP包的速率</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="TCP Sent Mbps Threshold" id="tcp_sent_Mbps_threshold_box" value={{ server_info_threshold_data['tcp_sent_Mbps_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">Mbps</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>源服务器从目标服务器接收TCP包的速率</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="TCP Received Mbps Threshold" id="tcp_received_Mbps_threshold_box" value={{ server_info_threshold_data['tcp_received_Mbps_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">Mbps</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                                <tr>
+                                                  <td>Ping的延迟</td>
+                                                  <td>
+                                                      <div class="input-group mb-3">
+                                                          <input type="text" class="form-control" aria-label="Ping Threshold" id="ping_threshold_box" value={{ server_info_threshold_data['ping_threshold']}}>
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text">秒</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!--模态框底部-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="modifyThreshold()">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    //调用api修改服务器各项指标阈值
+    function modifyThresholdAPI(cpu_value, memory_value, disk_value, bandwidth_value, html_open_time_value, backend_management_system_open_time_value, microservices_exec_time_value,tcp_sent_Mbps_threshold_value, tcp_received_Mbps_value, ping_value) {
+        $.ajax({
+                type:'PUT',
+                url:'/monitor/server-info-threshold-update/1/',
+                data: {
+                    'cpu_threshold' : cpu_value,
+                    'memory_threshold': memory_value,
+                    'disk_threshold': disk_value,
+                    'bandwidth_threshold': bandwidth_value,
+                    'HTML_open_time_threshold': html_open_time_value,
+                    'backend_management_system_open_time_threshold': backend_management_system_open_time_value,
+                    'microservices_exec_time_threshold': microservices_exec_time_value,
+                    'tcp_sent_Mbps_threshold': tcp_sent_Mbps_threshold_value,
+                    'tcp_received_Mbps_threshold': tcp_received_Mbps_value,
+                    'ping_threshold': ping_value,
+                },
+                success:function(arg) {}
+            });
+    }
+    //从输入框中获取数值并调用modifyThresholdAPI(),然后刷新当前页面
+    function modifyThreshold() {
+        let cpu_threshold = document.getElementById("cpu_threshold_box").value;
+        let memory_threshold = document.getElementById("memory_threshold_box").value;
+        let disk_threshold = document.getElementById("disk_threshold_box").value;
+        let bandwidth_threshold = document.getElementById("bandwidth_threshold_box").value;
+        let HTML_open_time_threshold = document.getElementById("HTML_open_time_threshold_box").value;
+        let backend_management_system_open_time_threshold = document.getElementById("backend_management_system_open_time_threshold_box").value;
+        let microservices_exec_time_threshold = document.getElementById("microservices_exec_time_threshold_box").value;
+        let tcp_sent_Mbps_threshold = document.getElementById("tcp_sent_Mbps_threshold_box").value;
+        let tcp_received_Mbps_threshold = document.getElementById("tcp_received_Mbps_threshold_box").value;
+        let ping_threshold = document.getElementById("ping_threshold_box").value;
+        modifyThresholdAPI(cpu_threshold, memory_threshold, disk_threshold, bandwidth_threshold, HTML_open_time_threshold, backend_management_system_open_time_threshold, microservices_exec_time_threshold, tcp_sent_Mbps_threshold, tcp_received_Mbps_threshold, ping_threshold);
+        location.reload();
+    }
+
+</script>
