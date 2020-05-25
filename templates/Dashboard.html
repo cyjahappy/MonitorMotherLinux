@@ -955,7 +955,7 @@
                         选择目标IP地址
                         </button>
                         <!--下拉菜单选择IP地址-->
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="server_ip_menu"></div>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="iperf3_server_ip_menu"></div>
                     </div>
                 </div>
                 <div class="card-body bg-white">
@@ -969,6 +969,7 @@
                             var iPerf3_TCP_sent_Mbps_data
                             var iPerf3_TCP_received_Mbps_data
                             var iPerf3_date
+                            // 传入被检测的目标IP地址列表(用于iPerf3测试和Ping测试)
                             var server_ip_list = {{ server_ip_list|safe}}
                             var iPerf3_target_server_ip = server_ip_list[0]
 
@@ -979,14 +980,7 @@
                             //用于填充选择IP地址的下拉菜单
                             for (var i=0;i<server_ip_list.length;i++)
                             {
-                                document.getElementById("server_ip_menu").innerHTML = document.getElementById("server_ip_menu").innerHTML + "<button class=\"dropdown-item\" onclick=\"refresh_iPerf3_Line_Chart('" + server_ip_list[i] + "')\">" + server_ip_list[i] + "</button>"
-                            }
-
-                            var child_server_ip_list = {{ child_server_ip_list|safe }}
-                            //用于填充导航栏中选择IP地址的下拉菜单
-                            for (var i=0;i<child_server_ip_list.length;i++)
-                            {
-                                document.getElementById("child_server_ip_menu").innerHTML = document.getElementById("child_server_ip_menu").innerHTML + "<a class=\"dropdown-item\" href=\"/dashboard/" + child_server_ip_list[0] + "\">" + child_server_ip_list[0] + "</a>"
+                                document.getElementById("iperf3_server_ip_menu").innerHTML = document.getElementById("iperf3_server_ip_menu").innerHTML + "<button class=\"dropdown-item\" onclick=\"refresh_iPerf3_Line_Chart('" + server_ip_list[i] + "')\">" + server_ip_list[i] + "</button>"
                             }
 
                             //用于初始化图表的数据
@@ -1035,14 +1029,84 @@
                                     });
                             </script>
                 </div>
-                <div class="card-footer bg-white">
-
-                </div>
             </div>
         </div>
         <!--Ping测试结果Line Chart(右半边)-->
         <div class="col-sm-6">
+            <div class="card card-chart">
+                <div class="card-header bg-white">
+                    <h5 class="card-title text-center">Ping测试</h5>
+                    <h6 class="card-title text-center" id="Ping_Chart_Title"></h6>
+                    <div class="dropdown" >
+                        <button class="btn dropdown-toggle btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;margin:0 auto">
+                        选择目标IP地址
+                        </button>
+                        <!--下拉菜单选择IP地址-->
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="ping_server_ip_menu"></div>
+                    </div>
+                </div>
+                <div class="card-body bg-white">
+                    <!--用于放置Ping Line Chart-->
+                    <div id="Ping_test_result_dashboard" style="width: 100%;height:300px;"></div>
+                        <script type="text/javascript">
+                            // 初始化CRMHTMLLineCharts实例
+                            var PingLineChart = echarts.init(document.getElementById('Ping_test_result_dashboard'));
 
+                            // 从视图函数中传入用于初始化图表的横纵坐标数据
+                            var Ping_result
+                            var Ping_date
+
+                            var Ping_target_server_ip = server_ip_list[0]
+
+                            //用于初始化副标题中源主机与目标主机IP地址
+                            document.getElementById("Ping_Chart_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ Ping_target_server_ip
+
+                            //用于填充选择IP地址的下拉菜单
+                            for (var i=0;i<server_ip_list.length;i++)
+                            {
+                                document.getElementById("ping_server_ip_menu").innerHTML = document.getElementById("ping_server_ip_menu").innerHTML + "<button class=\"dropdown-item\" onclick=\"refresh_Ping_Line_Chart('" + server_ip_list[i] + "')\">" + server_ip_list[i] + "</button>"
+                            }
+
+                            //部署的时候链接要换!!!!!!!!!
+                            //用于初始化图表的数据
+                            $.ajax({
+                                        type:'POST',
+                                        url:'http://{{ general_data['server_ip']}}/monitor/ping-results-minutes',
+                                        dataType:'json',
+                                        data: {
+                                            'server_ip': Ping_target_server_ip
+                                        },
+                                        success:function(json)
+                                            {
+                                                ping_test_result = eval(json);
+
+                                                Ping_result = ping_test_result.result;
+                                                Ping_date = ping_test_result.date;
+
+                                                PingLineChart.setOption({
+                                                tooltip: {
+                                                    trigger: 'axis'
+                                                },
+                                                legend: {
+                                                    data: ['延迟(秒)']
+                                                },
+                                                xAxis: {
+                                                    data: Ping_date
+                                                },
+                                                yAxis: {},
+                                                series: [
+                                                    {
+                                                        name: '延迟(秒)',
+                                                        type: 'line',
+                                                        data: Ping_result,
+                                                    },
+                                                ]
+                                                });
+                                            }
+                                    });
+                            </script>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -1055,7 +1119,57 @@
 //声明存储系统信息的全局变量
     var server_info
     var real_time_server_info
+    var child_server_ip_list = {{ child_server_ip_list|safe }}
 
+//用于填充导航栏中选择IP地址的下拉菜单
+for (var i=0;i<child_server_ip_list.length;i++)
+{
+    document.getElementById("child_server_ip_menu").innerHTML = document.getElementById("child_server_ip_menu").innerHTML + "<a class=\"dropdown-item\" href=\"/dashboard/" + child_server_ip_list[0] + "\">" + child_server_ip_list[0] + "</a>"
+}
+
+
+//用于切换Ping测试的目标IP时, 刷新图表数据为新的目标IP的数据.
+function refresh_Ping_Line_Chart(ip) {
+        Ping_target_server_ip = ip
+        document.getElementById("Ping_Chart_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ Ping_target_server_ip
+        $.ajax({
+                type:'POST',
+                url:'http://{{ general_data['server_ip']}}/monitor/ping-results-minutes',
+                dataType:'json',
+                data: {
+                    'server_ip': Ping_target_server_ip
+                },
+                success:function(json)
+                    {
+                        ping_test_result = eval(json);
+
+                        Ping_result = ping_test_result.result;
+                        Ping_date = ping_test_result.date;
+
+                        PingLineChart.setOption({
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['延迟(秒)']
+                        },
+                        xAxis: {
+                            data: Ping_date
+                        },
+                        yAxis: {},
+                        series: [
+                            {
+                                name: '延迟(秒)',
+                                type: 'line',
+                                data: Ping_result,
+                            },
+                        ]
+                        });
+                    }
+            });
+}
+
+//用于切换iPerf3测试的目标IP时, 刷新图表为数据为新的目标IP的数据.
 function refresh_iPerf3_Line_Chart(ip){
         iPerf3_target_server_ip = ip
         document.getElementById("iPerf3_Chart_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ iPerf3_target_server_ip
@@ -1304,7 +1418,7 @@ $.ajax({
                         series: [{
                             data: [
                                 {value: network_real_time_data, name: '每秒上传+下载的总量'},
-                                {value: 2 - network_real_time_data, name: '空'},
+                                {value: 3 - network_real_time_data, name: '空'},
                             ]
                         }]
                     });
@@ -1316,7 +1430,7 @@ $.ajax({
     function modifyThresholdAPI(cpu_value, memory_value, disk_value, bandwidth_value, html_open_time_value, backend_management_system_open_time_value, microservices_exec_time_value,tcp_sent_Mbps_threshold_value, tcp_received_Mbps_value, ping_value) {
         $.ajax({
                 type:'PUT',
-                url:'/monitor/server-info-threshold-update/1/',
+                url:'http://www.chenyuanjun.cn/server-info-threshold-update/1/',
                 data: {
                     'cpu_threshold' : cpu_value,
                     'memory_threshold': memory_value,
