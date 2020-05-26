@@ -309,10 +309,6 @@
                           <script>
                               var cpu_pie_chart = echarts.init(document.getElementById('cpu_pie_chart'));
                               var cpu_pie_chart_option = {
-                                    tooltip: {
-                                    trigger: 'item',
-                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
-                                    },
                                     color:['#c430d4', 'white'],
                                     series: [
                                         {
@@ -337,8 +333,8 @@
                                                 }
                                             },
                                             data: [
-                                                {value: 90, name: 'CPU使用率'},
-                                                {value: 10, name: '空闲'},
+                                                {value: 90},
+                                                {value: 10},
                                             ]
                                         }
                                     ]
@@ -382,10 +378,6 @@
                           <script>
                               var memory_pie_chart = echarts.init(document.getElementById('memory_pie_chart'));
                               var memory_pie_chart_option = {
-                                    tooltip: {
-                                    trigger: 'item',
-                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
-                                    },
                                     color:['#fc6969', 'white'],
                                     series: [
                                         {
@@ -410,8 +402,8 @@
                                                 }
                                             },
                                             data: [
-                                                {value: 90, name: 'Memory使用率'},
-                                                {value: 10, name: '空闲'},
+                                                {value: 90},
+                                                {value: 10},
                                             ]
                                         }
                                     ]
@@ -455,10 +447,6 @@
                           <script>
                               var disk_pie_chart = echarts.init(document.getElementById('disk_pie_chart'));
                               var disk_pie_chart_option = {
-                                    tooltip: {
-                                    trigger: 'item',
-                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
-                                    },
                                     color:['#18cdc7', 'white'],
                                     series: [
                                         {
@@ -483,8 +471,8 @@
                                                 }
                                             },
                                             data: [
-                                                {value: 90, name: 'Disk使用率'},
-                                                {value: 10, name: '空闲'},
+                                                {value: 90},
+                                                {value: 10},
                                             ]
                                         }
                                     ]
@@ -528,10 +516,6 @@
                           <script>
                               var network_pie_chart = echarts.init(document.getElementById('network_pie_chart'));
                               var network_pie_chart_option = {
-                                    tooltip: {
-                                    trigger: 'item',
-                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
-                                    },
                                     color:['#f23359', 'white'],
                                     series: [
                                         {
@@ -556,8 +540,8 @@
                                                 }
                                             },
                                             data: [
-                                                {value: 90, name: 'Network使用率'},
-                                                {value: 10, name: '空闲'},
+                                                {value: 90},
+                                                {value: 10},
                                             ]
                                         }
                                     ]
@@ -1404,24 +1388,24 @@ $.ajax({
                     cpu_pie_chart.setOption({
                         series: [{
                             data: [
-                                {value: cpu_real_time_data, name: 'CPU使用率'},
-                                {value: 100 - cpu_real_time_data, name: '空闲'},
+                                {value: cpu_real_time_data},
+                                {value: 100 - cpu_real_time_data},
                             ]
                         }]
                     });
                     memory_pie_chart.setOption({
                         series: [{
                             data: [
-                                {value: memory_real_time_data, name: 'Memory使用率'},
-                                {value: 100 - memory_real_time_data, name: '空闲'},
+                                {value: memory_real_time_data},
+                                {value: 100 - memory_real_time_data},
                             ]
                         }]
                     });
                     disk_pie_chart.setOption({
                         series: [{
                             data: [
-                                {value: disk_real_time_data, name: 'Disk使用率'},
-                                {value: 100 - disk_real_time_data, name: '空闲'},
+                                {value: disk_real_time_data},
+                                {value: 100 - disk_real_time_data},
                             ]
                         }]
                     });
@@ -1429,8 +1413,8 @@ $.ajax({
                     network_pie_chart.setOption({
                         series: [{
                             data: [
-                                {value: network_real_time_data, name: '上行带宽'},
-                                {value: {{ server_info_threshold_data['bandwidth_threshold'] }} - network_real_time_data, name: '空'},
+                                {value: network_real_time_data},
+                                {value: {{ server_info_threshold_data['bandwidth_threshold'] }} - network_real_time_data},
                             ]
                         }]
                     });
