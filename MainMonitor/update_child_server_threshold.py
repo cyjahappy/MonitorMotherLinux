@@ -18,6 +18,6 @@ def update_child_server_threshold():
     i = 0
     while i < total_server_ip:
         server_ip = server_ip_all_QuerySet[i].server_ip
-        url = 'http://' + server_ip + '/monitor/server-info-threshold-update/1/'
-        requests.put(url, data=serializer.data)
+        url = 'http://' + server_ip + '/monitor/server-info-threshold-update'
+        requests.post(url, data=serializer.data)
         i = i + 1

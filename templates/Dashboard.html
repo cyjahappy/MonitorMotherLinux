@@ -566,8 +566,8 @@
 
                   <!--Network实时数据的数字-->
                   <div class="col-sm-6">
-                      <p class="font-weight-light text-center">Real Time</p>
-                      <p class="font-weight-light text-center">Network Utility Rate</p>
+                      <p class="font-weight-light text-center">实时</p>
+                      <p class="font-weight-light text-center">上行带宽</p>
                       <p class="text-center font-weight-bold lead" id="network_real_time_data">Loading...</p>
                   </div>
                   </div>
@@ -1413,12 +1413,12 @@ $.ajax({
                             ]
                         }]
                     });
-                    //需要根据不同服务器的实时带宽不同修改上限
+                    //需要根据不同服务器的实时带宽不同修改上限!!!!!!!!!
                     network_pie_chart.setOption({
                         series: [{
                             data: [
-                                {value: network_real_time_data, name: '每秒上传+下载的总量'},
-                                {value: 3 - network_real_time_data, name: '空'},
+                                {value: network_real_time_data, name: '上行带宽'},
+                                {value: 280 - network_real_time_data, name: '空'},
                             ]
                         }]
                     });
