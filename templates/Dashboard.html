@@ -98,7 +98,7 @@
                                           <div class="input-group mb-3">
                                               <input type="text" class="form-control" aria-label="Bandwidth Threshold" id="bandwidth_threshold_box" value={{ server_info_threshold_data['bandwidth_threshold']}}>
                                               <div class="input-group-append">
-                                                  <span class="input-group-text">%</span>
+                                                  <span class="input-group-text">Mb/s</span>
                                               </div>
                                           </div>
                                       </td>
@@ -242,13 +242,15 @@
 
                 // 指定图表的配置项和数据
                 var cpu_line_chart_option = {
-                    tooltip: {},
+                    tooltip: {
+                        trigger: 'axis'
+                    },
                     xAxis: {
                         data: cpu_date
                     },
                     yAxis: {},
                     series: [{
-                        name: '使用率',
+                        name: 'CPU使用率',
                         type: 'line',
                         data: cpu_data,
                         areaStyle: {
@@ -347,8 +349,8 @@
 
                   <!--CPU实时数据的数字-->
                   <div class="col-sm-6">
-                      <p class="font-weight-light text-center">Real Time</p>
-                      <p class="font-weight-light text-center">CPU Utility Rate</p>
+                      <p class="font-weight-light text-center">实时</p>
+                      <p class="font-weight-light text-center">CPU占用率</p>
                       <p class="text-center font-weight-bold lead" id="cpu_real_time_data">Loading...</p>
                   </div>
                   </div>
@@ -420,8 +422,8 @@
 
                   <!--Memory实时数据的数字-->
                   <div class="col-sm-6">
-                      <p class="font-weight-light text-center">Real Time</p>
-                      <p class="font-weight-light text-center">Memory Utility Rate</p>
+                      <p class="font-weight-light text-center">实时</p>
+                      <p class="font-weight-light text-center">内存占用率</p>
                       <p class="text-center font-weight-bold lead" id="memory_real_time_data">Loading...</p>
                   </div>
                   </div>
@@ -493,8 +495,8 @@
 
                   <!--Disk实时数据的数字-->
                   <div class="col-sm-6">
-                      <p class="font-weight-light text-center">Real Time</p>
-                      <p class="font-weight-light text-center">Disk Utility Rate</p>
+                      <p class="font-weight-light text-center">实时</p>
+                      <p class="font-weight-light text-center">磁盘占用率</p>
                       <p class="text-center font-weight-bold lead" id="disk_real_time_data">Loading...</p>
                   </div>
                   </div>
@@ -606,14 +608,16 @@
 
                     // 指定图表的配置项和数据
                     var memory_line_chart_option = {
-                        tooltip: {},
+                        tooltip: {
+                            trigger: 'axis'
+                        },
                         xAxis: {
                             boundaryGap: false,
                             data: memory_date
                         },
                         yAxis: {},
                         series: [{
-                            name: '使用率',
+                            name: '内存使用率',
                             type: 'line',
                             data: memory_data,
                             areaStyle: {
@@ -671,13 +675,15 @@
 
                     // 指定图表的配置项和数据
                     var disk_line_chart_option = {
-                        tooltip: {},
+                        tooltip: {
+                            trigger: 'axis'
+                        },
                         xAxis: {
                             data: disk_date
                         },
                         yAxis: {},
                         series: [{
-                            name: '使用率',
+                            name: '磁盘占用率',
                             type: 'line',
                             data: disk_data,
                             areaStyle: {
@@ -735,13 +741,15 @@
 
                     // 指定图表的配置项和数据
                     var network_line_chart_option = {
-                        tooltip: {},
+                        tooltip: {
+                            trigger: 'axis'
+                        },
                         xAxis: {
                             data: network_date
                         },
                         yAxis: {},
                         series: [{
-                            name: '上传+下载(MB)',
+                            name: '上行带宽(MB/s)',
                             type: 'line',
                             data: network_data,
                             areaStyle: {
@@ -794,13 +802,15 @@
 
                             // 指定图表的配置项和数据
                             var CRM_HTML_line_chart_option = {
-                                tooltip: {},
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
                                 xAxis: {
                                     data: CRM_HTML_onload_date
                                 },
                                 yAxis: {},
                                 series: [{
-                                    name: 'seconds',
+                                    name: 'HTML页面完全打开时长(秒)',
                                     type: 'line',
                                     data: CRM_HTML_onload_data,
                                     areaStyle: {
@@ -876,14 +886,16 @@
 
                             // 指定图表的配置项和数据
                             var Management_System_HTML_line_chart_option = {
-                                tooltip: {},
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
                                 xAxis: {
                                     data: Management_System_HTML_onload_date
                                 },
                                 yAxis: {},
                                 series: [
                                     {
-                                    name: 'seconds',
+                                    name: 'HTML页面完全打开时长(秒)',
                                     type: 'line',
                                     data: Management_System_HTML_onload_data,
                                     areaStyle: {
@@ -1245,7 +1257,7 @@ $.ajax({
                         data: cpu_date
                     },
                     series: [{
-                        name:'',
+                        name:'CPU使用率',
                         data: cpu_data
                     }]
                     });
@@ -1255,7 +1267,7 @@ $.ajax({
                         data: memory_date
                     },
                     series: [{
-                        name:'',
+                        name:'内存使用率',
                         data: memory_data
                     }]
                     });
@@ -1265,7 +1277,7 @@ $.ajax({
                         data: disk_date
                     },
                     series: [{
-                        name:'',
+                        name:'磁盘占用率',
                         data: disk_data
                     }]
                     });
@@ -1275,7 +1287,7 @@ $.ajax({
                         data: network_date
                     },
                     series: [{
-                        name:'',
+                        name:'上行带宽(MB/s)',
                         data: network_data
                     }]
                     });
@@ -1328,7 +1340,7 @@ $.ajax({
                         data: cpu_date
                     },
                     series: [{
-                        name:'',
+                        name:'CPU使用率',
                         data: cpu_data
                     }]
                     });
@@ -1338,7 +1350,7 @@ $.ajax({
                         data: memory_date
                     },
                     series: [{
-                        name:'',
+                        name:'内存使用率',
                         data: memory_data
                     }]
                     });
@@ -1348,7 +1360,7 @@ $.ajax({
                         data: disk_date
                     },
                     series: [{
-                        name:'',
+                        name:'磁盘占用率',
                         data: disk_data
                     }]
                     });
@@ -1358,7 +1370,7 @@ $.ajax({
                         data: network_date
                     },
                     series: [{
-                        name:'',
+                        name:'上行带宽(MB/s)',
                         data: network_data
                     }]
                     });
@@ -1418,7 +1430,7 @@ $.ajax({
                         series: [{
                             data: [
                                 {value: network_real_time_data, name: '上行带宽'},
-                                {value: 280 - network_real_time_data, name: '空'},
+                                {value: {{ server_info_threshold_data['bandwidth_threshold'] }} - network_real_time_data, name: '空'},
                             ]
                         }]
                     });
