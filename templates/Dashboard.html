@@ -34,7 +34,7 @@
                 <!--更改阈值的按钮-->
                 <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal" style="display:block;margin:0 auto">
                 更改阈值
-            </button>
+                </button>
                 <!-- 点击按钮后弹出的模态框 -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -216,7 +216,7 @@
 
               <!--卡片头部的左半边-->
               <div class="col-sm-6 text-left">
-                <h5 class="card-title">CPU Utility Rate</h5>
+                <h5 class="card-title">CPU</h5>
               </div>
 
               <!--卡片头部的右半边-->
@@ -245,12 +245,15 @@
                     tooltip: {
                         trigger: 'axis'
                     },
+                    legend: {
+                        data: ['CPU使用率(%)']
+                    },
                     xAxis: {
                         data: cpu_date
                     },
                     yAxis: {},
                     series: [{
-                        name: 'CPU使用率',
+                        name: 'CPU使用率(%)',
                         type: 'line',
                         data: cpu_data,
                         areaStyle: {
@@ -289,11 +292,6 @@
 
           <!--声明一个新卡片-->
           <div class="card card-chart">
-
-              <!--卡片的头部-->
-              <div class="card-header bg-white">
-                <h6 class="text-center">CPU</h6>
-              </div>
 
               <!--卡片的主体-->
               <div class="card-body bg-white">
@@ -359,11 +357,6 @@
           <!--声明一个新卡片-->
           <div class="card card-chart">
 
-              <!--卡片的头部-->
-              <div class="card-header bg-white">
-                <h6 class="text-center">Memory</h6>
-              </div>
-
               <!--卡片的主体-->
               <div class="card-body bg-white">
 
@@ -428,11 +421,6 @@
           <!--声明一个新卡片-->
           <div class="card card-chart">
 
-              <!--卡片的头部-->
-              <div class="card-header bg-white">
-                <h6 class="text-center">Disk</h6>
-              </div>
-
               <!--卡片的主体-->
               <div class="card-body bg-white">
 
@@ -496,11 +484,6 @@
       <div class="col-sm-3">
           <!--声明一个新卡片-->
           <div class="card card-chart">
-
-              <!--卡片的头部-->
-              <div class="card-header bg-white">
-                <h6 class="text-center">Network</h6>
-              </div>
 
               <!--卡片的主体-->
               <div class="card-body bg-white">
@@ -572,7 +555,7 @@
 
               <!--卡片的头部-->
               <div class="card-header bg-white">
-                  <h6 class="card-title text-center">Memory Utility Rate</h6>
+                  <h6 class="card-title text-center">内存</h6>
               </div>
 
               <!--卡片的主体-->
@@ -595,13 +578,16 @@
                         tooltip: {
                             trigger: 'axis'
                         },
+                        legend: {
+                            data: ['内存使用率(%)']
+                        },
                         xAxis: {
                             boundaryGap: false,
                             data: memory_date
                         },
                         yAxis: {},
                         series: [{
-                            name: '内存使用率',
+                            name: '内存使用率(%)',
                             type: 'line',
                             data: memory_data,
                             areaStyle: {
@@ -639,7 +625,7 @@
 
               <!--卡片的头部-->
               <div class="card-header bg-white">
-                  <h6 class="card-title text-center">Disk Utility Rate</h6>
+                  <h6 class="card-title text-center">磁盘</h6>
               </div>
 
               <!--卡片的主体-->
@@ -662,12 +648,15 @@
                         tooltip: {
                             trigger: 'axis'
                         },
+                        legend: {
+                            data: ['磁盘占用率(%)']
+                        },
                         xAxis: {
                             data: disk_date
                         },
                         yAxis: {},
                         series: [{
-                            name: '磁盘占用率',
+                            name: '磁盘占用率(%)',
                             type: 'line',
                             data: disk_data,
                             areaStyle: {
@@ -705,7 +694,7 @@
 
               <!--卡片的头部-->
               <div class="card-header bg-white">
-                  <h6 class="card-title text-center">Network</h6>
+                  <h6 class="card-title text-center">上行带宽</h6>
               </div>
 
               <!--卡片的主体-->
@@ -727,6 +716,9 @@
                     var network_line_chart_option = {
                         tooltip: {
                             trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['上行带宽(MB/s)']
                         },
                         xAxis: {
                             data: network_date
@@ -788,6 +780,9 @@
                             var CRM_HTML_line_chart_option = {
                                 tooltip: {
                                     trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['HTML页面完全打开时长(秒)']
                                 },
                                 xAxis: {
                                     data: CRM_HTML_onload_date
@@ -873,6 +868,9 @@
                                 tooltip: {
                                     trigger: 'axis'
                                 },
+                                legend: {
+                                    data: ['HTML页面完全打开时长(秒)']
+                                },
                                 xAxis: {
                                     data: Management_System_HTML_onload_date
                                 },
@@ -944,7 +942,12 @@
         <div class="col-sm-6">
             <div class="card card-chart">
                 <div class="card-header bg-white">
-                    <h5 class="card-title text-center">iPerf测试</h5>
+                    <h5 class="card-title text-center">
+                        iPerf测试
+                        <button class="btn btn-outline-dark" style="float:right">
+                            实时测试
+                        </button>
+                    </h5>
                     <h6 class="card-title text-center" id="iPerf3_Chart_Title"></h6>
                     <div class="dropdown" >
                         <button class="btn dropdown-toggle btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;margin:0 auto">
@@ -1031,8 +1034,56 @@
         <div class="col-sm-6">
             <div class="card card-chart">
                 <div class="card-header bg-white">
-                    <h5 class="card-title text-center">Ping测试</h5>
+                    <h5 class="card-title text-center">
+                        Ping测试
+                        <!--打开Ping实时测试的模态框的按钮-->
+                        <button class="btn btn-outline-dark" data-toggle="modal" data-target="#PingTestModal" style="float:right">
+                            实时测试
+                        </button>
+                    </h5>
                     <h6 class="card-title text-center" id="Ping_Chart_Title"></h6>
+
+                    <!-- Ping实时测试的模态框 -->
+                    <div class="modal fade" id="PingTestModal" tabindex="-1" role="dialog" aria-labelledby="PingTestModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="PingTestModalLabel">实时Ping测试</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body" id="Real_Time_Ping_Test">
+                                    <table data-toggle="table">
+                                        <thead>
+                                            <tr>
+                                                <th>IP地址</th>
+                                                <th>结果</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for ping_server_ip in server_ip_list %}
+                                        <tr>
+                                            <td>
+                                            {{ ping_server_ip }}
+                                            </td>
+                                            <td id="ping({{ ping_server_ip }})">
+
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary">立即测试</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="dropdown" >
                         <button class="btn dropdown-toggle btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;margin:0 auto">
                         选择目标IP地址
@@ -1241,7 +1292,7 @@ $.ajax({
                         data: cpu_date
                     },
                     series: [{
-                        name:'CPU使用率',
+                        name:'CPU使用率(%)',
                         data: cpu_data
                     }]
                     });
@@ -1251,7 +1302,7 @@ $.ajax({
                         data: memory_date
                     },
                     series: [{
-                        name:'内存使用率',
+                        name:'内存使用率(%)',
                         data: memory_data
                     }]
                     });
@@ -1261,7 +1312,7 @@ $.ajax({
                         data: disk_date
                     },
                     series: [{
-                        name:'磁盘占用率',
+                        name:'磁盘占用率(%)',
                         data: disk_data
                     }]
                     });
@@ -1324,7 +1375,7 @@ $.ajax({
                         data: cpu_date
                     },
                     series: [{
-                        name:'CPU使用率',
+                        name:'CPU使用率(%)',
                         data: cpu_data
                     }]
                     });
@@ -1334,7 +1385,7 @@ $.ajax({
                         data: memory_date
                     },
                     series: [{
-                        name:'内存使用率',
+                        name:'内存使用率(%)',
                         data: memory_data
                     }]
                     });
@@ -1344,7 +1395,7 @@ $.ajax({
                         data: disk_date
                     },
                     series: [{
-                        name:'磁盘占用率',
+                        name:'磁盘占用率(%)',
                         data: disk_data
                     }]
                     });
