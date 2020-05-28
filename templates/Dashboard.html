@@ -953,7 +953,7 @@
 
                     <!-- iPerf3实时测试的模态框 -->
                     <div class="modal fade" id="iPerfTestModal" tabindex="-1" role="dialog" aria-labelledby="iPerfTestModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="iPerfTestModalLabel">实时iPerf3测试</h5>
@@ -970,6 +970,8 @@
                                         <!--下拉菜单选择IP地址-->
                                         <div class="dropdown-menu" aria-labelledby="real_time_iperf_dropdownMenuButton" id="real_time_iperf3_server_ip_menu"></div>
                                     </div>
+
+                                    <h6 style="margin-top: 5px; text-align: center">测试通常需要10秒</h6>
 
                                     <table data-toggle="table">
                                         <thead>
@@ -991,7 +993,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <h6 style="margin-top: 5px; text-align: center">测试大概需要10秒</h6>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" onclick="get_iperf_result()">立即测试</button>
@@ -1104,10 +1105,10 @@
                                                 {
                                                     real_time_iperf_test_result = eval(json);
                                                     document.getElementById("iperf_test_server_ip").innerHTML = real_time_iperf_test_result.server_ip;
-                                                    document.getElementById("iperf_sent_Mbps").innerHTML = real_time_iperf_test_result.sent_Mbps;
-                                                    document.getElementById("iperf_received_Mbps").innerHTML = real_time_iperf_test_result.received_Mbps;
-                                                    document.getElementById("iperf_mss").innerHTML = real_time_iperf_test_result.tcp_mss_default;
-                                                    document.getElementById("iperf_retransmits").innerHTML = real_time_iperf_test_result.retransmits;
+                                                    document.getElementById("iperf_sent_Mbps").innerHTML = real_time_iperf_test_result.sent_Mbps + " Mbps";
+                                                    document.getElementById("iperf_received_Mbps").innerHTML = real_time_iperf_test_result.received_Mbps + " Mbps";
+                                                    document.getElementById("iperf_mss").innerHTML = real_time_iperf_test_result.tcp_mss_default + " Bytes";
+                                                    document.getElementById("iperf_retransmits").innerHTML = real_time_iperf_test_result.retransmits + " 次";
                                                 }
                                         });
                             }
