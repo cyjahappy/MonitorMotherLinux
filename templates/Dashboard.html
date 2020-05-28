@@ -944,11 +944,63 @@
                 <div class="card-header bg-white">
                     <h5 class="card-title text-center">
                         iPerf测试
-                        <button class="btn btn-outline-dark" style="float:right">
+                        <button class="btn btn-outline-dark" data-toggle="modal" data-target="#iPerfTestModal" style="float:right">
                             实时测试
                         </button>
                     </h5>
                     <h6 class="card-title text-center" id="iPerf3_Chart_Title"></h6>
+
+
+                    <!-- iPerf3实时测试的模态框 -->
+                    <div class="modal fade" id="iPerfTestModal" tabindex="-1" role="dialog" aria-labelledby="iPerfTestModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="iPerfTestModalLabel">实时iPerf3测试</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="Real_Time_iPerf_Test">
+                                    <h6 class="card-title text-center" id="Real_Time_iPerf3_Title"></h6>
+                                    <div class="dropdown" >
+                                        <button class="btn dropdown-toggle btn-outline-dark" type="button" id="real_time_iperf_dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;margin:0 auto">
+                                        选择目标IP地址
+                                        </button>
+                                        <!--下拉菜单选择IP地址-->
+                                        <div class="dropdown-menu" aria-labelledby="real_time_iperf_dropdownMenuButton" id="real_time_iperf3_server_ip_menu"></div>
+                                    </div>
+
+                                    <table data-toggle="table">
+                                        <thead>
+                                            <tr>
+                                                <th>IP地址</th>
+                                                <th>发送速率</th>
+                                                <th>接收速率</th>
+                                                <th>重传次数</th>
+                                                <th>最大报文段长度</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="iperf_test_server_ip"></td>
+                                                <td id="iperf_sent_Mbps"></td>
+                                                <td id="iperf_received_Mbps"></td>
+                                                <td id="iperf_retransmits"></td>
+                                                <td id="iperf_mss"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <h6 style="margin-top: 5px; text-align: center">测试大概需要10秒</h6>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" onclick="get_iperf_result()">立即测试</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="dropdown" >
                         <button class="btn dropdown-toggle btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;margin:0 auto">
                         选择目标IP地址
@@ -971,6 +1023,7 @@
                             // 传入被检测的目标IP地址列表(用于iPerf3测试和Ping测试)
                             var server_ip_list = {{ server_ip_list|safe}}
                             var iPerf3_target_server_ip = server_ip_list[0]
+                            var iPerf3_real_time_target_server_ip = server_ip_list[0]
 
                             //用于初始化副标题中源主机与目标主机IP地址
                             document.getElementById("iPerf3_Chart_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ iPerf3_target_server_ip
@@ -980,7 +1033,11 @@
                             for (var i=0;i<server_ip_list.length;i++)
                             {
                                 document.getElementById("iperf3_server_ip_menu").innerHTML = document.getElementById("iperf3_server_ip_menu").innerHTML + "<button class=\"dropdown-item\" onclick=\"refresh_iPerf3_Line_Chart('" + server_ip_list[i] + "')\">" + server_ip_list[i] + "</button>"
+                                document.getElementById("real_time_iperf3_server_ip_menu").innerHTML = document.getElementById("real_time_iperf3_server_ip_menu").innerHTML + "<button class=\"dropdown-item\" onclick=\"refresh_iPerf3_real_time_target_server_ip('" + server_ip_list[i] + "')\">" + server_ip_list[i] + "</button>"
                             }
+
+                            //用于初始化实时iPerf3测试中源主机与目标主机IP地址
+                            document.getElementById("Real_Time_iPerf3_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ iPerf3_real_time_target_server_ip
 
                             //用于初始化图表的数据
                             $.ajax({
@@ -1026,6 +1083,35 @@
                                                 });
                                             }
                                     });
+
+                            // 用于刷新实时iPerf测试的目标IP地址
+                            function refresh_iPerf3_real_time_target_server_ip(ip) {
+                                iPerf3_real_time_target_server_ip = ip
+                                //用于初始化实时iPerf3测试中源主机与目标主机IP地址
+                                document.getElementById("Real_Time_iPerf3_Title").innerHTML = "源主机IP: {{ general_data['server_ip'] }}, 目标主机IP: "+ iPerf3_real_time_target_server_ip
+                            }
+
+                            // 用于获取实时iPerf测试的结果
+                            function get_iperf_result() {
+                                $.ajax({
+                                            type:'POST',
+                                            url:'http://{{ general_data['server_ip']}}/monitor/iperf3-test-result-api',
+                                            dataType:'json',
+                                            data: {
+                                                'server_ip': iPerf3_real_time_target_server_ip
+                                            },
+                                            success:function(json)
+                                                {
+                                                    real_time_iperf_test_result = eval(json);
+                                                    document.getElementById("iperf_test_server_ip").innerHTML = real_time_iperf_test_result.server_ip;
+                                                    document.getElementById("iperf_sent_Mbps").innerHTML = real_time_iperf_test_result.sent_Mbps;
+                                                    document.getElementById("iperf_received_Mbps").innerHTML = real_time_iperf_test_result.received_Mbps;
+                                                    document.getElementById("iperf_mss").innerHTML = real_time_iperf_test_result.tcp_mss_default;
+                                                    document.getElementById("iperf_retransmits").innerHTML = real_time_iperf_test_result.retransmits;
+                                                }
+                                        });
+                            }
+
                             </script>
                 </div>
             </div>
@@ -1072,12 +1158,12 @@
                                             </td>
                                         </tr>
                                         {% endfor %}
-
                                         </tbody>
                                     </table>
+                                <h6 id="ping_test_time" style="float: right; margin-top: 5px" ></h6>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary">立即测试</button>
+                                    <button type="button" class="btn btn-primary" onclick="get_ping_results()">立即测试</button>
                                 </div>
                             </div>
                         </div>
@@ -1151,6 +1237,30 @@
                                                 });
                                             }
                                     });
+
+                            // 用于获取实时Ping测试的结果
+                            function get_ping_results() {
+                                    for (var i=0;i<server_ip_list.length;i++)
+                                    {
+                                        $.ajax({
+                                            type:'POST',
+                                            url:'http://{{ general_data['server_ip']}}/monitor/ping-results-api',
+                                            dataType:'json',
+                                            data: {
+                                                'server_ip': server_ip_list[i]
+                                            },
+                                            success:function(json)
+                                                {
+                                                    real_time_ping_test_result = eval(json);
+                                                    tableId = "ping(" + real_time_ping_test_result.server_ip + ")";
+                                                    document.getElementById(tableId).innerHTML = real_time_ping_test_result.result + " 秒";
+                                                }
+                                        });
+                                    }
+                                    document.getElementById("ping_test_time").innerHTML = "测试时间: " + getCurrentTime_seconds()
+                            }
+
+
                             </script>
                 </div>
             </div>

@@ -58,6 +58,7 @@ def dashboard(request, server_ip):
     """
     渲染Dashboard前端页面
     """
+    # 所有子服务器的IP地址列表
     child_server_ip_list = get_child_server_ip_list()
     # 该server_ip对应的主机的系统各项指标信息
     server_info = send_get_request_to_server(server_ip, '/monitor/server-info-minutes')
