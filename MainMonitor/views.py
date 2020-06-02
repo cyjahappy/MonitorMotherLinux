@@ -10,7 +10,7 @@ from .html_performance_alert import html_performance_alert
 from .server_info_alert import server_info_alert
 from .update_child_server_threshold import update_child_server_threshold
 from .send_request import send_get_request_to_server, send_post_request_to_server
-from .general_function import get_child_server_ip_list
+from .general_function import get_child_server_ip_list, update_child_server_ip_list
 from numpy import mean
 
 
@@ -171,3 +171,10 @@ class GetServerInfoAlertMessage(APIView):
         server_info_problematic_ip = get_ip(request)
         server_info_alert(server_info_problematic_ip, server_info_problematic_dict)
         return Response(status.HTTP_200_OK)
+
+
+def update_child_server_list(request):
+    """
+    将所有子服务器中服务器IP地址列表更新到与母服务器的一致
+    """
+    update_child_server_ip_list()

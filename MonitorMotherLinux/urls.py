@@ -15,4 +15,5 @@ urlpatterns = [
     path('iperf-test-alert', views.GetIPerfTestAlertMessage.as_view()),
     path('html-performance-test-alert', views.GetHTMLPerformanceTestAlertMessage.as_view()),
     path('server-info-alert', views.GetServerInfoAlertMessage.as_view()),
+    path('update-child-server-list', views.update_child_server_list),
 ]

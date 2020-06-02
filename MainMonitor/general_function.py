@@ -1,4 +1,5 @@
 from .models import ChildServerList
+import requests
 
 
 def get_child_server_ip_list():
@@ -14,6 +15,21 @@ def get_child_server_ip_list():
         server_ip_list.append(server_ip_all_QuerySet[i].server_ip)
         i = i + 1
     return server_ip_list
+
+
+def update_child_server_ip_list():
+    """
+    将所有子服务器数据库中的服务器列表更新成与母服务器同步
+    """
+    server_ip_list = get_child_server_ip_list()
+    for server_ip in server_ip_list:
+        new_server_ip_list = server_ip_list
+        new_server_ip_list.remove(server_ip)
+        server_ip_list_dict = {
+            "server_ip_list": new_server_ip_list
+        }
+        url = 'http://' + server_ip + '/monitor/update-server-list'
+        requests.post(url, data=server_ip_list_dict)
 
 
 def bytes_to_dict(bytes_content):

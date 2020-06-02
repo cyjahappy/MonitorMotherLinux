@@ -32,6 +32,12 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <!--更改阈值的按钮-->
+                <button type="button" class="btn btn-outline-dark" style="display:block;margin:0 auto">
+                更新子服务器列表
+                </button>
+            </li>
+            <li class="nav-item">
+                <!--更改阈值的按钮-->
                 <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal" style="display:block;margin:0 auto">
                 更改阈值
                 </button>
@@ -1286,6 +1292,14 @@ for (var i=0;i<child_server_ip_list.length;i++)
     document.getElementById("child_server_ip_menu").innerHTML = document.getElementById("child_server_ip_menu").innerHTML + "<a class=\"dropdown-item\" href=\"/dashboard/" + child_server_ip_list[i] + "\">" + child_server_ip_list[i] + "</a>"
 }
 
+
+//更新子服务器的IP地址列表
+function update_Child_Server_List() {
+    $.ajax({
+        type:'GET',
+        url:'/update-child-server-list'
+    })
+}
 
 //用于切换Ping测试的目标IP时, 刷新图表数据为新的目标IP的数据.
 function refresh_Ping_Line_Chart(ip) {
