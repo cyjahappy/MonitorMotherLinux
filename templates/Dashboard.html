@@ -189,6 +189,7 @@
                 </div>
             </div>
             </li>
+
             <li class="nav-item">
                 <div class="dropdown">
                     <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -1282,7 +1283,7 @@
 //用于填充导航栏中选择IP地址的下拉菜单
 for (var i=0;i<child_server_ip_list.length;i++)
 {
-    document.getElementById("child_server_ip_menu").innerHTML = document.getElementById("child_server_ip_menu").innerHTML + "<a class=\"dropdown-item\" href=\"/dashboard/" + child_server_ip_list[0] + "\">" + child_server_ip_list[0] + "</a>"
+    document.getElementById("child_server_ip_menu").innerHTML = document.getElementById("child_server_ip_menu").innerHTML + "<a class=\"dropdown-item\" href=\"/dashboard/" + child_server_ip_list[i] + "\">" + child_server_ip_list[i] + "</a>"
 }
 
 
