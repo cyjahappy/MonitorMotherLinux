@@ -10,8 +10,9 @@ from .html_performance_alert import html_performance_alert
 from .server_info_alert import server_info_alert
 from .update_child_server_threshold import update_child_server_threshold
 from .send_request import send_get_request_to_server, send_post_request_to_server
-from .general_function import get_child_server_ip_list, update_child_server_ip_list
+from .general_function import get_child_server_ip_list, update_child_server_ip_list, update_server_info_threshold
 from numpy import mean
+from django.http import HttpResponse
 
 
 class ServerInfoThresholdList(generics.ListAPIView):
@@ -22,13 +23,10 @@ class ServerInfoThresholdList(generics.ListAPIView):
     serializer_class = ServerInfoThresholdSerializer
 
 
-class ServerInfoThresholdUpdate(generics.UpdateAPIView):
-    """
-    定义PUT操作,更新服务期各项指标阈值
-    """
-    queryset = ServerInfoThreshold.objects.all()
-    serializer_class = ServerInfoThresholdSerializer
+def server_info_threshold_update(request):
+    update_server_info_threshold(request.POST.dict())
     update_child_server_threshold()
+    return HttpResponse(status=200)
 
 
 def homepage(request):
@@ -66,7 +64,8 @@ def dashboard(request, server_ip):
     CRM_HTML_test_result = send_post_request_to_server(server_ip, '/monitor/html-performance-test-results-minutes',
                                                        {"url": "https://taobao.com"})
     # 后台管理系统前端性能测试结果(部署的时候要在这里更改URL地址)
-    Management_System_HTML_test_result = send_post_request_to_server(server_ip, '/monitor/html-performance-test-results-minutes',
+    Management_System_HTML_test_result = send_post_request_to_server(server_ip,
+                                                                     '/monitor/html-performance-test-results-minutes',
                                                                      {"url": "https://apple.com.cn"})
     # 该server_ip主机的server_list表
     server_list_response = send_get_request_to_server(server_ip, '/monitor/target-server-list')
@@ -178,3 +177,4 @@ def update_child_server_list(request):
     将所有子服务器中服务器IP地址列表更新到与母服务器的一致
     """
     update_child_server_ip_list()
+    return HttpResponse(status=200)

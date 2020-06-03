@@ -1,4 +1,4 @@
-from .models import ChildServerList
+from .models import ChildServerList, ServerInfoThreshold
 import requests
 
 
@@ -30,6 +30,15 @@ def update_child_server_ip_list():
         }
         url = 'http://' + server_ip + '/monitor/update-server-list'
         requests.post(url, data=server_ip_list_dict)
+
+
+def update_server_info_threshold(server_info_threshold_dict):
+    """
+    更新本服务器的数据库阈值表
+    :return:
+    """
+    ServerInfoThreshold.objects.filter(id=1).update(**server_info_threshold_dict)
+    pass
 
 
 def bytes_to_dict(bytes_content):

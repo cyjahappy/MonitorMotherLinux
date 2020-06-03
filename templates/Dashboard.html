@@ -1605,8 +1605,8 @@ $.ajax({
     //调用api修改服务器各项指标阈值
     function modifyThresholdAPI(cpu_value, memory_value, disk_value, bandwidth_value, html_open_time_value, backend_management_system_open_time_value, microservices_exec_time_value,tcp_sent_Mbps_threshold_value, tcp_received_Mbps_value, ping_value) {
         $.ajax({
-                type:'PUT',
-                url:'http://www.chenyuanjun.cn/server-info-threshold-update/1/',
+                type:'POST',
+                url:'http://www.chenyuanjun.cn/server-info-threshold-update',
                 data: {
                     'cpu_threshold' : cpu_value,
                     'memory_threshold': memory_value,
