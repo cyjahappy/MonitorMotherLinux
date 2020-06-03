@@ -7,7 +7,7 @@ class Mail:
     # 第三方 SMTP 服务
     __mail_host = "smtp.qq.com"  # 设置服务器
     __mail_user = "821659763@qq.com"  # 用户名
-    __mail_pass = "mkrhguexombobdde"  # 邮箱密码
+    __mail_pass = ""  # 邮箱密码
     __sender = '821659763@qq.com'
     __receivers = ['swe1609034@xmu.edu.my']  # 接收的邮件地址
 
