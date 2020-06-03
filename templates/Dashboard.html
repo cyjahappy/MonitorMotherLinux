@@ -32,7 +32,7 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <!--更改阈值的按钮-->
-                <button type="button" class="btn btn-outline-dark" style="display:block;margin:0 auto">
+                <button type="button" class="btn btn-outline-dark" style="display:block;margin:0 auto" onclick="update_Child_Server_List()">
                 更新子服务器列表
                 </button>
             </li>
@@ -1297,7 +1297,10 @@ for (var i=0;i<child_server_ip_list.length;i++)
 function update_Child_Server_List() {
     $.ajax({
         type:'GET',
-        url:'/update-child-server-list'
+        url:'/update-child-server-list',
+        success:function(arg) {
+            location.reload();
+        }
     })
 }
 
@@ -1606,7 +1609,7 @@ $.ajax({
     function modifyThresholdAPI(cpu_value, memory_value, disk_value, bandwidth_value, html_open_time_value, backend_management_system_open_time_value, microservices_exec_time_value,tcp_sent_Mbps_threshold_value, tcp_received_Mbps_value, ping_value) {
         $.ajax({
                 type:'POST',
-                url:'http://www.chenyuanjun.cn/server-info-threshold-update',
+                url:'/server-info-threshold-update',
                 data: {
                     'cpu_threshold' : cpu_value,
                     'memory_threshold': memory_value,
