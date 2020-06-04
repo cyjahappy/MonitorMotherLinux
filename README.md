@@ -219,7 +219,7 @@ gid = monitor
 
 其中将uWSGI的进程用户和用户组设置为monitor. 
 
-1. 运行以下指令
+6. 重载Daemon配置, 并配置开机启动
 
 ```
 # 重载systemd daemon配置
@@ -230,6 +230,47 @@ $ sudo systemctl enable emperor.uwsgi.service
 
 # 启动uWSGI
 $ sudo systemctl start emperor.uwsgi.service
+```
+
+检查uWSGI运行状态
+
+```
+$ sudo systemctl status emperor.uwsgi.service
+```
+
+如显示以下结果, 表示配置成功
+
+```
+● emperor.uwsgi.service - uWSGI Emperor
+   Loaded: loaded (/lib/systemd/system/emperor.uwsgi.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2020-06-04 08:04:26 UTC; 6min ago
+ Main PID: 794 (uwsgi)
+   Status: "The Emperor is governing 1 vassals"
+    Tasks: 12 (limit: 1151)
+   CGroup: /system.slice/emperor.uwsgi.service
+           ├─ 794 /usr/local/bin/uwsgi --ini /etc/uwsgi/emperor.ini
+           ├─ 806 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1010 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1011 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1012 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1013 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1014 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1015 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1016 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1018 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           ├─1019 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+           └─1020 /usr/local/bin/uwsgi --ini MonitorMotherLinux_uwsgi.ini
+
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 2 (pid: 1011, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: Thu Jun  4 08:04:35 2020 - [emperor] vassal MonitorMotherLinux_uwsgi.ini is ready to accept reque
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 3 (pid: 1012, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 4 (pid: 1013, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 5 (pid: 1014, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 6 (pid: 1015, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 7 (pid: 1016, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 8 (pid: 1018, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 9 (pid: 1019, cores: 1)
+Jun 04 08:04:35 ubuntu-Singapore2 uwsgi[794]: spawned uWSGI worker 10 (pid: 1020, cores: 1)
 ```
 
 #### 配置Nginx
@@ -395,6 +436,12 @@ WantedBy=multi-user.target
 
 2. 编辑Celery配置文件
 
+在/etc中创建文件夹conf.d
+
+```
+$ sudo mkdir /etc/conf.d
+```
+
 在/etc/conf.d中创建文件celery
 
 ```
@@ -455,7 +502,38 @@ ExecStart=/bin/sh -c '${CELERY_BIN} beat  \
 WantedBy=multi-user.target
 ```
 
-4. 重载Daemon配置, 并配置开机启动
+4. 创建日志存放的文件夹
+
+celery.serivce文件设置的,存放日志的文件夹celery不会自动创建.需要手动创建,否则启动服务时会报错.
+
+创建文件并编辑: celery.conf
+
+```
+sudo vim /etc/tmpfiles.d/celery.conf
+```
+
+复制下面内容到配置文件中
+
+```
+d /var/run/celery 0755 monitor monitor -
+d /var/log/celery 0755 monitor monitor -
+```
+
+其中用户与用户组应与celery.service内配置的一致.
+
+```
+d /var/run/celery 0755 文件夹所属用户 文件夹所属用户组 -
+d /var/log/celery 0755 文件夹所属用户 文件夹所属用户组 -
+```
+
+生成文件夹
+
+```
+sudo systemd-tmpfiles --create
+```
+
+
+5. 重载Daemon配置, 并配置开机启动
 
 ```
 # 重载systemd daemon配置
@@ -473,3 +551,79 @@ $ sudo systemctl start celery.service
 # 启动Celery Beat
 $ sudo systemctl start celerybeat.service
 ```
+
+查看Celery的运行状态
+
+```
+$ sudo systemctl status celery.service
+```
+
+如果显示如下结果表示成功
+
+```
+● celery.service - Celery Service
+   Loaded: loaded (/lib/systemd/system/celery.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2020-06-04 08:04:26 UTC; 13s ago
+ Main PID: 820 (sh)
+    Tasks: 2 (limit: 1151)
+   CGroup: /system.slice/celery.service
+           ├─820 /bin/sh -c /home/monitor/.virtualenvs/MonitorMotherLinux/bin/celery -A MonitorMotherLinux worker --pidfile=/var/run/celery/%n.
+           └─821 /home/monitor/.virtualenvs/MonitorMotherLinux/bin/python /home/monitor/.virtualenvs/MonitorMotherLinux/bin/celery -A MonitorMo
+
+Jun 04 08:04:26 ubuntu-Singapore2 systemd[1]: Started Celery Service.
+```
+
+查看Celery Beat的运行状态
+
+```
+$ sudo systemctl status celerybeat.service
+```
+
+如果显示如下结果表示成功
+
+```
+● celerybeat.service - Celery Beat Service
+   Loaded: loaded (/lib/systemd/system/celerybeat.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2020-06-04 08:04:26 UTC; 35s ago
+ Main PID: 785 (sh)
+    Tasks: 2 (limit: 1151)
+   CGroup: /system.slice/celerybeat.service
+           ├─785 /bin/sh -c /home/monitor/.virtualenvs/MonitorMotherLinux/bin/celery beat     -A MonitorMotherLinux --pidfile=/var/run/celery/b
+           └─788 /home/monitor/.virtualenvs/MonitorMotherLinux/bin/python /home/monitor/.virtualenvs/MonitorMotherLinux/bin/celery beat -A Moni
+
+Jun 04 08:04:26 ubuntu-Singapore2 systemd[1]: Started Celery Beat Service.
+```
+
+先把Celery和Celery Beat关闭, 将每个子服务器数据库中的子服务器IP列表都配置好之后再开启. 
+
+```
+# 关闭Celery
+$ sudo systemctl stop celery.service
+
+# 关闭Celery Beat
+$ sudo systemctl stop celerybeat.service
+```
+
+#### 配置子服务器IP地址列表
+
+1. 创建母服务器Django Admin的超级用户
+
+进入Django Web App项目主目录
+
+```
+$ cd /home/monitor/MonitorMotherLinux
+```
+
+进入Python虚拟环境
+
+```
+$ workon MonitorMotherLinux
+```
+
+创建超级用户, 根据提示输入账号密码
+
+```
+$ python manage.py createsuperuser
+```
+
+打开浏览器输入```{服务器公网IP或者域名}/admin```, 输入账号密码进入管理界面.
