@@ -14,7 +14,8 @@ SECRET_KEY = ')r+tw*!8!nooaobii@_bl*+3wnmlyw71xmmqke$kaiu6ow-*q#'
 DEBUG = False
 
 ALLOWED_HOSTS = ['129.204.183.108',
-                 'www.chenyuanjun.cn']
+                 'www.chenyuanjun.cn',
+                 'chenyuanjun.cn']
 
 
 # Application definition
