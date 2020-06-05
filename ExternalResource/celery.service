@@ -1,0 +1,14 @@
+[Unit]
+Description=Celery Service
+After=network.target
+
+[Service]
+User=monitor
+Group=monitor
+EnvironmentFile=/etc/conf.d/celery
+WorkingDirectory=/home/monitor/MonitorMotherLinux
+ExecStart=/bin/sh -c '${CELERY_BIN} -A ${CELERY_APP} worker --pidfile=${CELERYD_PID_FILE}\
+  --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS} -P eventlet'
+
+[Install]
+WantedBy=multi-user.target

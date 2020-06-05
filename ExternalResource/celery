@@ -1,0 +1,20 @@
+# 指向Python虚拟环境中celery的二进制文件的绝对路径
+CELERY_BIN="/home/monitor/.virtualenvs/MonitorMotherLinux/bin/celery"
+
+# Celery App的名字, 与Django Web App的名字相同
+CELERY_APP="MonitorMotherLinux"
+
+# Extra command-line arguments to the worker
+CELERYD_OPTS="--time-limit=300"
+
+# - %n will be replaced with the first part of the nodename.
+# - %I will be replaced with the current child process index
+#   and is important when using the prefork pool to avoid race conditions.
+# 指向Celery的PID文件和LOG文件的绝对路径
+CELERYD_PID_FILE="/var/run/celery/%n.pid"
+CELERYD_LOG_FILE="/var/log/celery/%n%I.log"
+CELERYD_LOG_LEVEL="INFO"
+
+# 指向Celery Beat的PID文件和LOG文件的绝对路径
+CELERYBEAT_PID_FILE="/var/run/celery/beat.pid"
+CELERYBEAT_LOG_FILE="/var/log/celery/beat.log"
