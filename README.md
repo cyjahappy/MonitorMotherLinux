@@ -454,7 +454,7 @@ $ sudo vim /etc/conf.d/celery
 # 指向Python虚拟环境中celery的二进制文件的绝对路径
 CELERY_BIN="/home/monitor/.virtualenvs/MonitorMotherLinux/bin/celery"
 
-# App示例的名字
+# Celery App的名字, 与Django Web App的名字相同
 CELERY_APP="MonitorMotherLinux"
 
 # Extra command-line arguments to the worker
@@ -626,4 +626,46 @@ $ workon MonitorMotherLinux
 $ python manage.py createsuperuser
 ```
 
-打开浏览器输入```{服务器公网IP或者域名}/admin```, 输入账号密码进入管理界面.
+2. 添加子服务器IP地址到母服务器的数据库中
+   
+- 打开浏览器输入```{服务器公网IP或者域名}/admin```, 输入账号密码进入管理界面.
+- 点击Child server lists
+- 点击右上角的ADD CHILD SERVER LIST可以添加新的子服务器IP地址
+- 记得将其中原本示例的IP地址删掉
+
+3. 同步母服务器中的子服务器IP地址列表到各个子服务器的数据库中
+
+进入Django Web App项目主目录, 并进入Python虚拟环境
+
+```
+$ cd /home/monitor/MonitorMotherLinux
+
+$ workon MonitorMotherLinux
+```
+
+进入Django Shell模式
+
+```
+$ python manage.py shell
+```
+
+调用项目内置函数
+
+```
+>>> from MainMonitor.general_function import update_child_server_ip_list
+>>> update_child_server_ip_list()
+```
+
+如果显示如下结果, 则说明同步成功
+
+```
+>>> from MainMonitor.general_function import update_child_server_ip_list
+>>> update_child_server_ip_list()
+成功将母服务器中的子服务器IP地址列表同步到各个子服务器数据库中!
+```
+
+退出Django Shell模式
+
+```
+>>> exit()
+```

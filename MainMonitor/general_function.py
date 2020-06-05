@@ -30,6 +30,7 @@ def update_child_server_ip_list():
         }
         url = 'http://' + server_ip + '/monitor/update-server-list'
         requests.post(url, data=server_ip_list_dict)
+    print('成功将母服务器中的子服务器IP地址列表同步到各个子服务器数据库中!')
 
 
 def update_server_info_threshold(server_info_threshold_dict):
