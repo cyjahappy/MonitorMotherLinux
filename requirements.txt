@@ -9,7 +9,7 @@ django-celery-beat==2.0.0
 django-celery-results==1.2.1
 django-ipware==2.1.0
 django-timezone-field==4.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 dnspython==1.16.0
 eventlet==0.25.2
 greenlet==0.4.15
